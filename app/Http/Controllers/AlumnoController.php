@@ -122,20 +122,20 @@ class AlumnoController extends Controller
         ];
 
         if ($request->hasFile('foto')) {
-            $campos = ['foto' > 'required|max:10000|mimes:jpeg,png,jpg'];
-            $mensaje = ['foto.required' => 'La foto es requerida'];
+            $campos['foto'] = 'required|max:10000|mimes:jpeg,png,jpg';
+            $mensaje['foto.required'] = 'La foto es requerida';
         }
 
 
         $this->validate($request, $campos, $mensaje);
 
         $datosalumno = request()->except(['_token', '_method', 'password_confirmation']);
-        dd($datosalumno);
         if ($request->hasFile('foto')) {
             $alumno = alumno::findOrFail($id);
             Storage::delete('public/' . $alumno->foto);
-            $datosalumno['foto'] = $request->file('foto')->store('uploads', 'public');
+            $datosalumno['foto'] = 'storage/' . $request->file('foto')->store('uploads', 'public');
         }
+       
         Alumno::where('id', '=', $id)->update($datosalumno);
 
         $alumno = Alumno::findOrFail($id);

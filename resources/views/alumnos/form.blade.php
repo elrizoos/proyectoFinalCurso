@@ -85,7 +85,7 @@
                <label for="foto"> </label>
                @if (isset($alumno->foto))
                    <img class="img-thumbnail img-fluid" width="100px" height="100px"
-                       src="{{ asset('storage') . '/' . $alumno->foto }}" alt="Imagen del usuario">
+                       src="{{ asset($alumno->foto) }}" alt="Imagen del usuario">
                @endif
            </div>
            <div class="form-group">
