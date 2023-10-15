@@ -61,16 +61,14 @@ Route::get('/alumnos/{grupo}/mostrar-alumnos', [AlumnoController::class, 'mostra
 
 Route::get("/grupos-clases/grupos/{grupo}/asignar-alumnos", [GrupoController::class, 'asignarAlumnos'])->name('grupos.asignar-alumnos')->middleware('auth');
 
-
-
-
-
 //Ruta para acceder al formulario de edicion del registro
 Route::get("horarios/edit/{dia}/{tramo}/{fecha}/{id}", [HorarioController::class, 'edit']);
 
 //Ruta para acceder al formulario de Horario(create) mediante el botón disponible en la casilla vacia del horario
 Route::get("horarios/create/{dia}/{tramo}/{fecha}", [HorarioController::class, 'createPredefinido']);
 
+//Ruta para obtener los alumnos de forma obtenada en la lista de alumnos
+Route::get('alumnos/obtener-alumnos', [AlumnoController::class, 'obtenerAlumnos'])->middleware('auth');
 Route::resource('alumnos', AlumnoController::class)->middleware('auth');
 
 Route::resource('grupos-clases/clases', ClaseController::class)->middleware('auth');

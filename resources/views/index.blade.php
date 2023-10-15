@@ -27,9 +27,9 @@
                                 <a href="{{ url('/alumnos/create') }}">Crear nuevo alumno</a>
                             </li>
                             <li>
-                                <p id="mostrarPopupEdit">Gestionar alumno</p>
+                                <a href="#" onclick="buscar()">Gestionar Alumno</a>
                                 <script>
-                                    document.getElementById('mostrarPopupEdit').addEventListener('click', function(){
+                                    function buscar(){
                                         //Url donde se encuentra el contenido que voy a mostrar en la ventana emergente
                                         var url = "{{route('alumnos.search')}}";
                                         
@@ -42,7 +42,7 @@
 
                                         //Abrir la ventana emergente
                                         window.open(url, 'PopupWindow', opciones);
-                                    });
+                                    }
                                 </script>
                             </li>
                             
@@ -54,7 +54,7 @@
                     <div class="contenedorTarjeta">
                         <h3>Control Empleados</h3>
                         <ul>
-                            <li>Crear nuevo alumno</li>
+                            <li><a href="{{route('empleados.create')}}">Crear nuevo empleado</a></li>
                             <li>Editar alumno</li>
                             <li>Borrar alumno</li>
                         </ul>
