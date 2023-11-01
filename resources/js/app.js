@@ -1,6 +1,6 @@
 import "./bootstrap";
 console.log("Script cargado");
-
+import $ from 'jquery';
 /*$(document).ready(function () {
     $("#tramoHorario").change(function () {
         const tramo = $(this).val(); //Captura del valor del select
@@ -18,22 +18,23 @@ console.log("Script cargado");
     });
 });
 */
-$(document).ready(function () {
-    let contador = 1;
 
-    $("#agregarDia").click(function (e) {
-        e.preventDefault();
 
-        let nuevoSelect = `<label for="diaSemana${contador}">Día de la semana:</label>
-                           <select name="diaSemana[]" id="diaSemana${contador}" required>
-                               <option value="Lunes">Lunes</option>
-                               <option value="Martes">Martes</option>
-                               <option value="Miércoles">Miércoles</option>
-                               <option value="Jueves">Jueves</option>
-                               <option value="Viernes">Viernes</option>
-                           </select>`;
-
-        $(this).before(nuevoSelect);
-        contador++;
-    });
+$(function () {
+    document
+        .querySelector("#cuadradoGrupo")
+        .addEventListener("click", editarGrupos);
+    document
+        .querySelector("#cuadradoClase")
+        .addEventListener("click", editarClases);
 });
+
+function editarGrupos() {
+    //console.log("Hola, estamos dentro de editarGrupos");
+    document.querySelector('#ediccion')
+}
+
+function editarClases() {
+    //console.log("Hola, estamos dentro de editarClases");
+}
+

@@ -6,6 +6,7 @@ use App\Http\Controllers\GrupoController;
 
 use App\Http\Controllers\ClaseController;
 use App\Http\Controllers\HorarioController;
+use App\Http\Controllers\PayPalController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,8 +32,6 @@ Route::get("/empleados", function() {
 });
 
 
-//Obtenemos automaticamente las rutas asociadas a empleados
-Route::resource('empleados', EmpleadoController::class)->middleware('auth');
 
 //Hacemos que desaparezca el boton de registro de usuario y de restablecer la contraseña
 Auth::routes(['register'=>true, 'reset' => false]);
@@ -53,7 +52,11 @@ Route::group(['middleware' => 'auth'], function() {
 Route::get("/alumnos/search", function () {
     return view('alumnos.search');
 })->name('alumnos.search')->middleware('auth');
+Route::get("/empleados/search", function () {
+    return view('empleados.search');
+})->name('empleados.search')->middleware('auth');
 Route::get('/alumnos/searchAlumno', [AlumnoController::class, 'buscarAlumno']);
+Route::get('/empleados/searchEmpleado', [EmpleadoController::class, 'buscarEmpleado']);
 
 Route::get('/grupos-clases/grupos/{grupo}/mostrar-alumnos', [GrupoController::class, 'mostrarAlumnos'])->name('grupos.mostrar-alumnos')->middleware('auth');
 
@@ -69,6 +72,28 @@ Route::get("horarios/create/{dia}/{tramo}/{fecha}", [HorarioController::class, '
 
 //Ruta para obtener los alumnos de forma obtenada en la lista de alumnos
 Route::get('alumnos/obtener-alumnos', [AlumnoController::class, 'obtenerAlumnos'])->middleware('auth');
+
+//Ruta para acceder a la ediccion de grupos o clases
+Route::get('grupos-clases/editar', function() {
+    return view('grupos-clases.editar');
+});
+
+/*Route::get('grupos-clases/grupos/editar', function(){
+    return view('grupos-clases.grupos.editar');
+});
+Route::get('grupos-clases/clases/editar', function(){
+    return view('grupos-clases.clases.editar');
+});
+*/
+Route::get('grupos-clases/grupos/editar', [GrupoController::class, 'cargarGrupos'])->middleware('auth');
+
+Route::get('grupos-clases/clases/editar', [ClaseController::class, 'cargarClases'])->middleware('auth');
+
+Route::get('facturaciones/pagar', [PayPalController::class, 'mostrarFormulario'])->middleware('auth');
+Route::get('facturaciones/procesar-pago', [PayPalController::class, 'procesarPago'])->middleware('auth');
+//Obtenemos automaticamente las rutas asociadas a empleados
+Route::resource('empleados', EmpleadoController::class)->middleware('auth');
+
 Route::resource('alumnos', AlumnoController::class)->middleware('auth');
 
 Route::resource('grupos-clases/clases', ClaseController::class)->middleware('auth');
@@ -103,6 +128,10 @@ Route::resource('grupos-clases/clases', AlumnoController::class);
 Route::get('/horarios', function() {
     return view('horarios');
 });*/
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

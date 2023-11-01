@@ -148,4 +148,29 @@ class EmpleadoController extends Controller
         }
         return redirect('empleados')->with('mensaje', 'Empleado borrado correctamente');
     }
+
+    public function buscarEmpleado(Request $request)
+    {
+        //dd($request->query('id'));
+        $id = $request->input('id');
+        $nombre = $request->input('nombre');
+
+        //dd($id != "");
+        if ($id != "" && $nombre != "") {
+            $resultados = Empleado::where('id', '=', $id)
+                ->where('nombre', '=', $nombre)
+                ->get();
+            dd("uno");
+        } else if ($id != "") {
+            $resultados = Empleado::where('id', '=', $id)
+                ->get();
+            //dd("dos");
+        } else {
+            $resultados = Empleado::where('nombre', '=', $nombre)
+                ->get();
+            //dd("tres");
+        }
+        //dd($resultados);
+        return view('empleados.search', compact('resultados'));
+    }
 }
