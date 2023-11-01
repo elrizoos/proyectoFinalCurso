@@ -22,6 +22,10 @@
                             <input type="text" name="id" id="id">
 
                         </label>
+                        <label for="nombre">Nombre:
+                            <input type="text" name="nombre" id="nombre">
+
+                        </label>
                         <input type="submit" value="Buscar Alumno">
                     </form>
 
@@ -51,7 +55,7 @@
                         <tr>
                             <td>
                                 <img class="img-thumbnail img-fluid" width="70px" height="100px"
-                                    src="{{ asset('storage') . '/' . $alumno->foto }}" alt="Imagen del usuario">
+                                    src="{{ asset($alumno->foto) }}" alt="Imagen del usuario">
                             </td>
                             <td>{{ $alumno->id }}</td>
                             <td>{{ $alumno->nombre }}</td>

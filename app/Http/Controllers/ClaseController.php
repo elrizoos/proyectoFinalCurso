@@ -116,4 +116,11 @@ class ClaseController extends Controller
 
 
     }
+
+    public function cargarClases()
+    {
+        $clases = Clase::paginate(5);
+
+        return view('grupos-clases.clases.editar', ['clases' => $clases]);
+    }
 }

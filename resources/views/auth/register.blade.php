@@ -1,4 +1,4 @@
-@extends('layouts.app', ['modo' => 'Registro'])
+@extends('layouts.app')
 
 @section('content')
 <div class="container">

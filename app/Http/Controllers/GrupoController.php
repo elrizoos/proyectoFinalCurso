@@ -118,4 +118,9 @@ class GrupoController extends Controller
 
 
     }
+    public function cargarGrupos() {
+        $grupos = Grupo::paginate(5);
+
+        return view('grupos-clases.grupos.editar', ['grupos'=> $grupos]);
+    }
 }

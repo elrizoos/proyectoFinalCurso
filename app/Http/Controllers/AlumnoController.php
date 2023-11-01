@@ -13,11 +13,16 @@ class AlumnoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $alumnos = Alumno::paginate(5);
+        $column = $request->input('columna', 'id'); // Columna de ordenamiento predeterminada
+        $direction = $request->input('direccion', 'asc'); // Dirección de ordenamiento predeterminada
+        $perPage = $request->input('perPage', 5); // Elementos por página
+        //$alumnos = Alumno::orderBy('nombre')->paginate(5);
+        $alumnos = Alumno::orderBy($column, $direction)->paginate($perPage);
         $grupos = Grupo::paginate(5);
-        return view('alumnos.index',['alumnos' => $alumnos, 'grupos' => $grupos]);
+        //return view('alumnos.index', ['alumnos' => $alumnos, 'grupos' => $grupos, 'ordenActual' => 'asc', 'columnaActual' => 'nombre']);
+        return view('alumnos.index', ['alumnos' => $alumnos, 'grupos' => $grupos, 'columna' => $column, 'direccion' => $direction]);
     }
 
     /**
@@ -26,7 +31,7 @@ class AlumnoController extends Controller
     public function create()
     {
         $grupos = Grupo::paginate(5);
-        return view('alumnos.create',['grupos' => $grupos]);
+        return view('alumnos.create', ['grupos' => $grupos]);
     }
 
     /**
@@ -48,7 +53,7 @@ class AlumnoController extends Controller
                 'regex:/([A-Za-z0-9]+(_[A-Za-z0-9]+)+)/i',
                 'confirmed'
             ],
-            
+
         ];
 
         $mensaje = [
@@ -135,7 +140,7 @@ class AlumnoController extends Controller
             Storage::delete('public/' . $alumno->foto);
             $datosalumno['foto'] = 'storage/' . $request->file('foto')->store('uploads', 'public');
         }
-       
+
         Alumno::where('id', '=', $id)->update($datosalumno);
 
         $alumno = Alumno::findOrFail($id);
@@ -160,21 +165,69 @@ class AlumnoController extends Controller
      * Mostrar alumnos correspondientes a una clase
      */
 
-     public function mostrarAlumnos($grupo){
+    public function mostrarAlumnos($grupo)
+    {
 
         $alumnosClase = Alumno::where('codigoGrupo', $grupo)->get();
         $alumnosFuera = Alumno::whereNOTIn('codigoGrupo', [$grupo])->get();
-        return view('alumnos.grupo',['alumnos'=> $alumnosClase, 'modo' => 'ver', 'grupo' => $grupo, 'alumnosFuera' => $alumnosFuera]);
-     }
+        return view('alumnos.grupo', ['alumnos' => $alumnosClase, 'modo' => 'ver', 'grupo' => $grupo, 'alumnosFuera' => $alumnosFuera]);
+    }
 
-     public function buscarAlumno(Request $request) {
-       $id = $request->input('id');
-
-       $resultados = Alumno::where('id', '=', $id)->get();
-       return view('alumnos.search', compact('resultados'));
-     }
-
-     public function borrarAlumno(Request $request) {
+    public function buscarAlumno(Request $request)
+    {
+        //dd($request->query('id'));
         $id = $request->input('id');
-     }
+        $nombre = $request->input('nombre');
+
+        //dd($id != "");
+        if ($id != "" && $nombre != "") {
+            $resultados = Alumno::where('id', '=', $id)
+                ->where('nombre', '=', $nombre)
+                ->get();
+            dd("uno");
+        } else if ($id != "") {
+            $resultados = Alumno::where('id', '=', $id)
+                ->get();
+            //dd("dos");
+        } else {
+            $resultados = Alumno::where('nombre', '=', $nombre)
+                ->get();
+            //dd("tres");
+        }
+        //dd($resultados);
+        return view('alumnos.search', compact('resultados'));
+    }
+
+    public function borrarAlumno(Request $request)
+    {
+        $id = $request->input('id');
+    }
+
+    public function obtenerAlumnos(Request $request)
+    {
+        $columna = $request->input('columna', 'nombre');
+    
+        $orden = $request->input('orden', 'asc'); // Valor predeterminado a 'asc' si no se proporciona
+
+        //dd($columna, $orden);
+
+        $alumnos = Alumno::orderBy($columna, $orden)->paginate(5);
+        $alumnosData = $alumnos->items();
+
+        $pagination = [
+            'total' => $alumnos->total(),
+            'per_page' => $alumnos->perPage(),
+            'current_page' => $alumnos->currentPage(),
+            'last_page' => $alumnos->lastPage()
+        ];
+    
+        $responseData = [
+            'alumnos' => $alumnosData,
+            'pagination' => $pagination,
+            'columnaActual' => $columna,
+            'orden' => $orden
+        ];
+        return response()->json($responseData);
+    }
+
 }

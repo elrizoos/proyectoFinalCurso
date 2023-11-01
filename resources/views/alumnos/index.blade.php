@@ -6,35 +6,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+   
 </head>
 
 <body>
     @extends('layouts.app', ['modo' => 'Alumnos'])
     @section('content')
         <div class="container">
-            <a href="{{ url('alumnos/create')}}" class="btn btn-success">Crear nuevo alumno</a>
+            <a href="{{ url('alumnos/create') }}" class="btn btn-success">Crear nuevo alumno</a>
             <br><br>
-            <table class="table text-center align-middle table-striped-columns table-responsive fs-6"
+            <table id="tablaAlumnos" class="table text-center align-middle table-striped-columns table-responsive fs-6"
                 style="position: absolute;left:5%; width:90%">
                 <thead class="table-light ">
                     <th>Foto</th>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Apellidos</th>
-                    <th>DNI</th>
-                    <th>Telefono</th>
-                    <th>Email</th>
-                    <th>FechaNacimiento</th>
-                    <th>Direccion</th>
-                    <th>CodigoGrupo</th>
+                    <th> <a href="{{ route('alumnos.index', ['columna' => 'id', 'direccion' => $direccion == 'asc' && $columna == 'id' ? 'desc' : 'asc']) }}">ID</a></th>
+                    <th> <a href="{{ route('alumnos.index', ['columna' => 'nombre', 'direccion' => $direccion == 'asc' && $columna == 'nombre' ? 'desc' : 'asc']) }}">Nombre</a></th>
+                    <th> <a href="{{ route('alumnos.index', ['columna' => 'apellidos', 'direccion' => $direccion == 'asc' && $columna == 'apellidos' ? 'desc' : 'asc']) }}">Apellidos</a></th>
+                    <th> <a href="{{ route('alumnos.index', ['columna' => 'dni', 'direccion' => $direccion == 'asc' && $columna == 'dni' ? 'desc' : 'asc']) }}">DNI</a></th>
+                    <th> <a href="{{ route('alumnos.index', ['columna' => 'telefono', 'direccion' => $direccion == 'asc' && $columna == 'telefono' ? 'desc' : 'asc']) }}">Telefono</a></th>
+                    <th> <a href="{{ route('alumnos.index', ['columna' => 'email', 'direccion' => $direccion == 'asc' && $columna == 'email' ? 'desc' : 'asc']) }}">Email</a></th>
+                    <th> <a href="{{ route('alumnos.index', ['columna' => 'fechaNacimiento', 'direccion' => $direccion == 'asc' && $columna == 'fechaNacimiento' ? 'desc' : 'asc']) }}">fechaNacimiento</a></th>
+                    <th> <a href="{{ route('alumnos.index', ['columna' => 'direccion', 'direccion' => $direccion == 'asc' && $columna == 'direccion' ? 'desc' : 'asc']) }}">direccion</a></th>
+                    <th> <a href="{{ route('alumnos.index', ['columna' => 'codigoGrupo', 'direccion' => $direccion == 'asc' && $columna == 'codigoGrupo' ? 'desc' : 'asc']) }}">codigoGrupo</a></th>
                     <th>Opciones</th>
                 </thead>
                 <tbody>
                     @foreach ($alumnos as $alumno)
                         <tr>
                             <td>
-                               <img class="img-thumbnail img-fluid" width="70px" height="100px"
-     src="{{ asset( $alumno->foto) }}" alt="Imagen del usuario">
+                                <img class="img-thumbnail img-fluid" width="70px" height="100px"
+                                    src="{{ asset($alumno->foto) }}" alt="Imagen del usuario">
 
 
 
@@ -68,8 +69,12 @@
                         </tr>
                     @endforeach
                 </tbody>
-                {{ $alumnos->links('pagination::bootstrap-4') }}
+
+
             </table>
+            <div id="paginacion" class="pagination-container">
+               {{ $alumnos->appends(request()->input())->links('pagination::bootstrap-4') }}
+            </div>
         </div>
     @endsection
 </body>
