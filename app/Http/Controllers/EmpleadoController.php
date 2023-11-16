@@ -12,6 +12,12 @@ class EmpleadoController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+    public function inicio(Request $request)
+    {
+        $empleados = Empleado::all();
+        return view("Empleado.index", compact('empleados'));
+    }
     public function index()
     {
         $datos['empleados']=Empleado::paginate(5);

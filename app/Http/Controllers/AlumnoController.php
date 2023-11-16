@@ -13,6 +13,10 @@ class AlumnoController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+    public function inicio(Request $request){
+        
+    }
     public function index(Request $request)
     {
         $column = $request->input('columna', 'id'); // Columna de ordenamiento predeterminada
