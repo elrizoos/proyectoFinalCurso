@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AlumnoController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\CodigoValidacionController;
 use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\GaleriaController;
 use App\Http\Controllers\GrupoController;
@@ -8,7 +10,10 @@ use App\Http\Controllers\GrupoController;
 use App\Http\Controllers\ClaseController;
 use App\Http\Controllers\HorarioController;
 use App\Http\Controllers\PayPalController;
+use App\Mail\EmergencyCallReceived;
 use Illuminate\Support\Facades\Route;
+
+use Illuminate\Mail\Mailable;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,12 +25,24 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+/*
+░█████╗░██████╗░███╗░░░███╗██╗███╗░░██╗
+██╔══██╗██╔══██╗████╗░████║██║████╗░██║
+███████║██║░░██║██╔████╔██║██║██╔██╗██║
+██╔══██║██║░░██║██║╚██╔╝██║██║██║╚████║
+██║░░██║██████╔╝██║░╚═╝░██║██║██║░╚███║
+╚═╝░░╚═╝╚═════╝░╚═╝░░░░░╚═╝╚═╝╚═╝░░╚══╝
+*/
+
 Route::middleware(['auth', 'checkRole:admin'])->group(function () {
     // Rutas para el usuario admin
     Route::get('/home', function () {
         return view('index');
     })->name('home');
     
+
+
     //Asignando ruta para la busqueda de alumno
     Route::get("/alumnos/search", function () {
         return view('alumnos.search');
@@ -58,6 +75,8 @@ Route::middleware(['auth', 'checkRole:admin'])->group(function () {
 
 
 
+   
+
 
    // Route::get('facturaciones/pagar', [PayPalController::class, 'mostrarFormulario']);
 
@@ -86,7 +105,11 @@ Route::middleware(['auth', 'checkRole:admin'])->group(function () {
 
     Route::resource('grupos-clases', GrupoController::class);
 
-
+    Route::get('/generador', function() {
+        return view('generador.index');
+    });
+    //Rutas para el generador de codigo de validacion registro
+    Route::get('/generadorCodigo', [CodigoValidacionController::class, 'generateInvitationCode'])->name('generadorCodigo');
 
 
     //Ruta para acceder al formulario de edicion del registro
@@ -97,6 +120,11 @@ Route::middleware(['auth', 'checkRole:admin'])->group(function () {
 
     Route::resource('horarios', HorarioController::class);
 
+    Route::get('/mailTest', function() {
+        Mail::to('pabloterror99@gmail.com')->send(new EmergencyCallReceived());
+
+        return 'Email sent!';
+    });
 
 
 
@@ -106,15 +134,38 @@ Route::middleware(['auth', 'checkRole:admin'])->group(function () {
 
 
 });
+/*
 
+░█████╗░██╗░░░░░██╗░░░██╗███╗░░░███╗███╗░░██╗░█████╗░
+██╔══██╗██║░░░░░██║░░░██║████╗░████║████╗░██║██╔══██╗
+███████║██║░░░░░██║░░░██║██╔████╔██║██╔██╗██║██║░░██║
+██╔══██║██║░░░░░██║░░░██║██║╚██╔╝██║██║╚████║██║░░██║
+██║░░██║███████╗╚██████╔╝██║░╚═╝░██║██║░╚███║╚█████╔╝
+╚═╝░░╚═╝╚══════╝░╚═════╝░╚═╝░░░░░╚═╝╚═╝░░╚══╝░╚════╝░
+*/
 Route::middleware(['auth', 'checkRole:alumno'])->group(function () {
     // Rutas para el usuario alumno
     Route::get('/alumno', [AlumnoController::class,'inicio'])->name('inicioAlumno');
 });
 
+
+/*
+███████╗███╗░░░███╗██████╗░██╗░░░░░███████╗░█████╗░██████╗░░█████╗░
+██╔════╝████╗░████║██╔══██╗██║░░░░░██╔════╝██╔══██╗██╔══██╗██╔══██╗
+█████╗░░██╔████╔██║██████╔╝██║░░░░░█████╗░░███████║██║░░██║██║░░██║
+██╔══╝░░██║╚██╔╝██║██╔═══╝░██║░░░░░██╔══╝░░██╔══██║██║░░██║██║░░██║
+███████╗██║░╚═╝░██║██║░░░░░███████╗███████╗██║░░██║██████╔╝╚█████╔╝
+╚══════╝╚═╝░░░░░╚═╝╚═╝░░░░░╚══════╝╚══════╝╚═╝░░╚═╝╚═════╝░░╚════╝░
+*/
 Route::middleware(['auth', 'checkRole:empleado'])->group(function () {
     // Rutas para el usuario empleado
-    
+    Route::get('/empleado/create', function () {
+        return view('Empleado.create');
+    });
+
+    Route::get('/empleados', function() {
+        return view('Empleado.index');
+    });
 
     Route::get('/empleado', [EmpleadoController::class,'inicio'])->name('inicioEmpleado');
 });
@@ -122,6 +173,8 @@ Route::middleware(['auth', 'checkRole:empleado'])->group(function () {
 
 
 
+
+Route::post('/logout', [LoginController::class,'logout'])->name('logout');
 
 
 //Para que si ponemos la ruta principal haya que iniciar sesion en la pagina

@@ -91,6 +91,33 @@
                                 </div>
                             </div>
 
+
+                            <div class="row mb-3 " style="margin-top: 5px;">
+                                <div class="col-md-3">
+
+                                </div>
+                                <input type="checkbox" name="miCheckbox" class="col-md-1" style="justify-content:right">
+                                <label class=" col-md-6 form-check-label">Usar Codigo</label>
+                            </div>
+
+
+
+                            <div class="row mb-3">
+
+                                <label for="code"
+                                    class="col-md-4 col-form-label text-md-end">{{ __('Código') }}</label>
+
+                                <div class="col-md-6">
+                                    <input class="form-control" type="text" name="code" id="code" maxlength="8">
+
+                                    @error('code')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+
                             <div class="row mb-0">
                                 <div class="col-md-6 offset-md-4">
                                     <button type="submit" class="btn btn-primary">

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Empleado;
 use App\Models\Clase;
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -15,8 +16,8 @@ class EmpleadoController extends Controller
 
     public function inicio(Request $request)
     {
-        $empleados = Empleado::all();
-        return view("Empleado.index", compact('empleados'));
+        $empleado = Auth::user();
+        return view("Empleado.index", compact('empleado'));
     }
     public function index()
     {

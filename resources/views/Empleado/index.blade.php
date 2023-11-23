@@ -10,17 +10,41 @@
      @extends('layouts.app', ['modo' => 'empleado:'])
     @section('content')
     <div class="container">
-        <div class="row">
-            <div class="col columnaPerfil">
-                <div class="imagen">
-                    {{ print_r($empleados)}}
+        <div class="contenedorTarjeta">
+            <div class="row">
+                <div class="col">
+                    <div class="imagen">
+                        <div class="foto">
+                            foto: {{$empleado}}
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="datos">
+                        <ul>
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-            <div class="col">
-                f1c2
+            <div class="row">
+                <div class="col">
+                    <div class="menu">
+                        <ul>
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-            <div class="col">
-                f1c3
+            <div class="row">
+                <div class="contenidoCambiante">
+
+                </div>
             </div>
         </div>
     </div>

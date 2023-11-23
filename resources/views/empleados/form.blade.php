@@ -11,6 +11,10 @@
                </ul>
            </div>
        @endif
+
+       @php
+           $clases = session('clases')
+       @endphp
        <div class="col col-10">
            <div class="row row-12">
                <div class="form-group col col-8">
@@ -67,7 +71,7 @@
                    <!-- Lista desplegable para Clase -->
                    <label for="codigoClase">Clase: </label>
                    <select name="codigoClase" class="form-control">
-                       @foreach ($clases as $clase)
+                       @foreach ( $clases as $clase)
                            <option value="{{ $clase->id }}">{{ $clase->id }} {{ $clase->nombre }}</option>
                        @endforeach
 
