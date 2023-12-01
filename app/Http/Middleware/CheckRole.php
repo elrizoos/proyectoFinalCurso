@@ -13,13 +13,18 @@ class CheckRole
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle($request, Closure $next, $role)
+    public function handle($request, Closure $next, ...$roles)
     {
-        if ($request->user() && $request->user()->role != $role) {
-            echo $role, $request->user()->role;
-            abort(403,'No tienes permisos para acceder a esta página, Por favor ponte en contacto con nosotros en el siguiente formulario');
-            crearFormulario();
+        // Verificar si el usuario está autenticado
+        if ($request->user()) {
+            $userRole = $request->user()->role;
+
+            // Verificar si el rol del usuario está en la lista de roles permitidos
+            if (!in_array($userRole, $roles)) {
+                abort(403, 'No tienes permisos para acceder a esta página. Por favor, ponte en contacto con nosotros en el siguiente formulario');
+            }
         }
+
         return $next($request);
     }
 

@@ -1,5 +1,5 @@
 <?php
-
+use App\Http\Controllers\FacturacionController;
 use App\Http\Controllers\AlumnoController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CodigoValidacionController;
@@ -76,7 +76,8 @@ Route::middleware(['auth', 'checkRole:admin'])->group(function () {
 
 
    
-
+    Route::get('/facturacion', [FacturacionController::class, 'mostrarFormulario']);
+    
 
    // Route::get('facturaciones/pagar', [PayPalController::class, 'mostrarFormulario']);
 
@@ -143,9 +144,11 @@ Route::middleware(['auth', 'checkRole:admin'])->group(function () {
 ██║░░██║███████╗╚██████╔╝██║░╚═╝░██║██║░╚███║╚█████╔╝
 ╚═╝░░╚═╝╚══════╝░╚═════╝░╚═╝░░░░░╚═╝╚═╝░░╚══╝░╚════╝░
 */
-Route::middleware(['auth', 'checkRole:alumno'])->group(function () {
+Route::middleware(['suscrito:facturacion','auth', 'checkRole:alumno'])->group(function () {
     // Rutas para el usuario alumno
     Route::get('/alumno', [AlumnoController::class,'inicio'])->name('inicioAlumno');
+    Route::post('/mas-tarde', [FacturacionController::class,'masTarde'])->name('masTarde');
+    Route::get('/facturacionAlumno/{tiempoTranscurrido}/{segundosDesdeCreacion}', [FacturacionController::class, 'mostrarFacturacion'])->name('facturacion');
 });
 
 
@@ -159,6 +162,7 @@ Route::middleware(['auth', 'checkRole:alumno'])->group(function () {
 */
 Route::middleware(['auth', 'checkRole:empleado'])->group(function () {
     // Rutas para el usuario empleado
+    Route::get('/facturacion', [FacturacionController::class, 'mostrarFacturacion'])->name('facturacion');
     Route::get('/empleado/create', function () {
         return view('Empleado.create');
     });

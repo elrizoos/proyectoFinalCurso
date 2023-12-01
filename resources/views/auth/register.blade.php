@@ -1,7 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
+    <div class="container">@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
@@ -24,6 +32,7 @@
                                             <strong>{{ $message }}</strong>
                                         </span>
                                     @enderror
+                                    
                                 </div>
                             </div>
 
@@ -96,7 +105,7 @@
                                 <div class="col-md-3">
 
                                 </div>
-                                <input type="checkbox" name="miCheckbox" class="col-md-1" style="justify-content:right">
+                                <input type="checkbox" name="codigoUse" class="col-md-1" style="justify-content:right">
                                 <label class=" col-md-6 form-check-label">Usar Codigo</label>
                             </div>
 

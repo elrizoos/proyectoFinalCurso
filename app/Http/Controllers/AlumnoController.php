@@ -15,7 +15,7 @@ class AlumnoController extends Controller
      */
 
     public function inicio(Request $request){
-        
+        return view('alumnos.perfil');
     }
     public function index(Request $request)
     {

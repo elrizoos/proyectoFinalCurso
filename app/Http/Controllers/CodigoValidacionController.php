@@ -12,11 +12,13 @@ class CodigoValidacionController extends Controller
     public function generateInvitationCode(Request $request)
     {
         $code = strtoupper(Str::random(8));
+        $email = $request->input('email');
         $userType = $request->input("userType");
         InvitationCode::create([
             'code' => $code,
             'used' => false,
             'role' => $userType,
+            'email' => $email,
         ]);
 
         // Obtén el correo electrónico del usuario de alguna manera, por ejemplo, desde un formulario
