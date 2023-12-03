@@ -23,7 +23,7 @@ class Suscripcion
             $currentRoute = $request->route()->getName();
 
             // Lista de rutas que no requieren suscripción
-            $excludedRoutes = ['facturacion', 'masTarde'];
+            $excludedRoutes = ['facturacionAlumno', 'masTarde', 'checkout'];
             //dd($currentRoute, !in_array($currentRoute, $excludedRoutes));
 
 
@@ -33,7 +33,7 @@ class Suscripcion
             $tiempoTranscurrido = $this->mostrarTiempo($segundosDesdeCreacion);
             // Verificar si la ruta actual está en la lista de rutas excluidas
             if (!in_array($currentRoute, $excludedRoutes) && !Auth::user()->verificado && !$request->session()->has('masTarde')) {
-                return redirect()->route('facturacion', ['tiempoTranscurrido' => $tiempoTranscurrido, 'segundosDesdeCreacion' => $segundosDesdeCreacion]);
+                return redirect()->route('facturacionAlumno', ['tiempoTranscurrido' => $tiempoTranscurrido, 'segundosDesdeCreacion' => $segundosDesdeCreacion]);
             }
         }
 

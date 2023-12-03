@@ -191,8 +191,8 @@ class RegisterController extends Controller
 */
             if ($user->role === 'admin') {
                 $redirectPath = '/admin';
-            } else {
-                $redirectPath = '/facturacion';
+            } elseif ($user->role === 'alumno') {
+                $redirectPath = route('inicioAlumno');
             }
 
         }

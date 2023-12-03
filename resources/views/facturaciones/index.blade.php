@@ -45,28 +45,25 @@
 
 <body>
     <div id="tiempoTranscurrido" data-tiempo="{{ $segundosDesdeCreacion }}"></div>
+
+   @foreach ($productos as $producto)
     <div class="tarifa tarifa-basica">
-
-        <h2>Tarifa Básica</h2>
-        <p>Acceso a clases regulares</p>
-        <p>$15 por clase o $120 por mes</p>
+        <h2>{{ $producto['nombre'] }}</h2>
+        <p>{{ $producto['descripcion'] }}</p>
+        <p>{{ $producto['precio'] }}</p>
+        
+        <form action="{{ route('checkout') }}" method="POST">
+            @csrf
+            <input type="hidden" name="producto" value="{{ json_encode($producto) }}">
+            <button type="submit">Comprar</button>
+        </form>
     </div>
+@endforeach
 
-    <div class="tarifa tarifa-premium">
-        <h2>Tarifa Premium</h2>
-        <p>Clases especializadas y entrenamiento personalizado</p>
-        <p>$25 por clase o $200 por mes</p>
-    </div>
-
-    <div class="tarifa tarifa-flex">
-        <h2>Tarifa Flex</h2>
-        <p>Flexibilidad en la programación y acceso a clases virtuales</p>
-        <p>$18 por clase o $150 por mes</p>
-    </div>
 
     <div class="aviso">
         <p>¡Aviso importante! Debes hacer tu elección antes de 72 horas.</p>
-        <form action="{{route('masTarde')}}" method="POST">
+        <form action="{{ route('masTarde') }}" method="POST">
             @csrf
             <button id="mas-tarde" type="submit">Más Tarde</button>
         </form>
@@ -85,7 +82,7 @@
             const minutos = Math.floor((tiempoRestante % 3600) / 60);
             const segundosRestantes = tiempoRestante % 60;
             document.getElementById('contador').innerText =
-            `Tiempo restante: ${horas}:${minutos}:${segundosRestantes < 10 ? '0' : ''}${segundosRestantes}`;
+                `Tiempo restante: ${horas}:${minutos}:${segundosRestantes < 10 ? '0' : ''}${segundosRestantes}`;
         }
 
         setInterval(() => {
@@ -97,8 +94,6 @@
                 actualizarContador();
             }
         }, 1000);
-
-
     </script>
 </body>
 

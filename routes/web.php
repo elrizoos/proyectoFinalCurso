@@ -148,7 +148,9 @@ Route::middleware(['suscrito:facturacion','auth', 'checkRole:alumno'])->group(fu
     // Rutas para el usuario alumno
     Route::get('/alumno', [AlumnoController::class,'inicio'])->name('inicioAlumno');
     Route::post('/mas-tarde', [FacturacionController::class,'masTarde'])->name('masTarde');
-    Route::get('/facturacionAlumno/{tiempoTranscurrido}/{segundosDesdeCreacion}', [FacturacionController::class, 'mostrarFacturacion'])->name('facturacion');
+    Route::get('/facturacionAlumno/{tiempoTranscurrido}/{segundosDesdeCreacion}', [FacturacionController::class, 'mostrarFacturacion'])->name('facturacionAlumno');
+    Route::post('/checkout', [FacturacionController::class, 'mostrarCheckout'])->name('checkout');
+
 });
 
 
@@ -162,7 +164,7 @@ Route::middleware(['suscrito:facturacion','auth', 'checkRole:alumno'])->group(fu
 */
 Route::middleware(['auth', 'checkRole:empleado'])->group(function () {
     // Rutas para el usuario empleado
-    Route::get('/facturacion', [FacturacionController::class, 'mostrarFacturacion'])->name('facturacion');
+    Route::get('/facturacion', [FacturacionController::class, 'mostrarFacturacion'])->name('facturacionEmpleado');
     Route::get('/empleado/create', function () {
         return view('Empleado.create');
     });
