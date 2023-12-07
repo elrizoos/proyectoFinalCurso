@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             GrupoTableSeeder::class,
             EmpleadoTableSeeder::class,
             AlumnoTableSeeder::class,
+            GrupoClaseCustomSeeder::class,
         ]);
 
        

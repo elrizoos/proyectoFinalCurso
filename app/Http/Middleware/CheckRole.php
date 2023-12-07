@@ -15,6 +15,13 @@ class CheckRole
      */
     public function handle($request, Closure $next, ...$roles)
     {
+        $currentRoute = $request->route()->getName();
+        //dd($currentRoute);
+        $paginasPermitidas = ['alumnos.index'];
+
+        if(in_array($currentRoute, $paginasPermitidas)){
+            return $next($request);
+        }
         // Verificar si el usuario está autenticado
         if ($request->user()) {
             $userRole = $request->user()->role;

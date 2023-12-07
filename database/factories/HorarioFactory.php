@@ -18,7 +18,7 @@ class HorarioFactory extends Factory
     {
 
         do {
-            $primerDia = $this->faker->dateTimeBetween($startDate = '-1 month', $endDate = 'now');
+            $primerDia = $this->faker->dateTimeBetween($startDate = '-1 month', $endDate = '+2 month');
         } while ($primerDia->format('N') >= 6); // 6 y 7 representan sábado y domingo respectivamente
 
         $tramos = [

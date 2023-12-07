@@ -27,9 +27,29 @@
         @endif
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
+                <?php
+                $user = Auth::user();
+                ?>
+                @if ($user)
+                    @if ($user->role === 'alumno')
+                        <a class="navbar-brand" href="{{ route('inicioAlumno', ['alumno' => $user->email]) }}">
+                            {{ config('app.name', 'Laravel') }}
+                        </a>
+                    @elseif($user->role === 'empleado')
+                        <a class="navbar-brand" href="{{ route('inicioEmpleado') }}">
+                            {{ config('app.name', 'Laravel') }}
+                        </a>
+                    @elseif($user->role === 'admin')
+                        <a class="navbar-brand" href="{{ route('inicioAdmin') }}">
+                            {{ config('app.name', 'Laravel') }}
+                        </a>
+                    @else
+                        <a class="navbar-brand" href="{{ route('login') }}">
+                            {{ config('app.name', 'Laravel') }}
+                        </a>
+                    @endif
+                @endif
+
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">

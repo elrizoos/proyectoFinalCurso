@@ -8,4 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class Alumno extends Model
 {
     use HasFactory;
+    public function asistencias()
+    {
+        return $this->hasMany(Asistencia::class);
+    }
+
+    public function obtenerAsistencias(){
+        //dd($this);
+        $asistencia = Asistencia::where('alumno_id', '=', $this->id)->get();
+        //dd($asistencia);
+        $numeroAsistencias = $asistencia->count();
+       // dd($numeroAsistencias);
+        return $numeroAsistencias;
+    }
 }

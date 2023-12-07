@@ -105,7 +105,7 @@ class RegisterController extends Controller
                 'name' => ['required', 'string', 'max:255'],
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
                 'password' => ['required', 'string', 'min:8', 'confirmed'],
-                'role' => ['required', 'string', 'in:alumno,empleado'],
+                'role' => ['required', 'string', 'in:admin,alumno,empleado'],
 
             ];
 
@@ -192,7 +192,9 @@ class RegisterController extends Controller
             if ($user->role === 'admin') {
                 $redirectPath = '/admin';
             } elseif ($user->role === 'alumno') {
-                $redirectPath = route('inicioAlumno');
+                $redirectPath = route('registroAlumno');
+            } else {
+                $redirectPath = route('inicioEmpleado');
             }
 
         }
@@ -202,7 +204,7 @@ class RegisterController extends Controller
 
         // Almacenar el mensaje informativo en la sesión
         $request->session()->flash('registro_exitoso', 'Registro exitoso. Bienvenido.');
-
+        $request->session()->put('user', $user);
         // Redireccionar a la ruta correspondiente
         return redirect($redirectPath)->with('clases', $clases);
     }

@@ -28,6 +28,7 @@ class LoginController extends Controller
      * @var string
      */
     protected $redirectTo = '/';
+    protected $name = "";
 
     /**
      * Create a new controller instance.
@@ -43,13 +44,14 @@ class LoginController extends Controller
         // Redirigir según el rol del usuario después de iniciar sesión
         if ($user->role === 'admin') {
             $this->redirectTo = '/admin';
+            return redirect($this->redirectTo);
         } elseif ($user->role === 'alumno') {
-            $this->redirectTo = '/alumno';
+            $this->name = "inicioAlumno";
         } elseif ($user->role === 'empleado') {
             $this->redirectTo = '/empleado';
         }
 
-        return redirect($this->redirectTo);
+        return redirect()->route($this->name, ['alumno' => $user->id]);
     }
 
     public function logout(Request $request) {

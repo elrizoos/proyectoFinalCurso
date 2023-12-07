@@ -17,8 +17,8 @@
         }
 
         .tarifa {
-            width: 200px;
-            height: 150px;
+            width: 250px;
+            height: 250px;
             padding: 20px;
             margin: 10px;
             text-align: center;
@@ -50,7 +50,9 @@
     <div class="tarifa tarifa-basica">
         <h2>{{ $producto['nombre'] }}</h2>
         <p>{{ $producto['descripcion'] }}</p>
-        <p>{{ $producto['precio'] }}</p>
+        <p>{{$producto['precioMensual']}}</p>
+        <p>O</p>
+        <p><p>{{$producto['precioAnual']}}</p></p>
         
         <form action="{{ route('checkout') }}" method="POST">
             @csrf

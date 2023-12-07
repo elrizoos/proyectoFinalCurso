@@ -40,7 +40,7 @@ Route::middleware(['auth', 'checkRole:admin'])->group(function () {
     Route::get('/home', function () {
         return view('index');
     })->name('home');
-    
+
 
 
     //Asignando ruta para la busqueda de alumno
@@ -69,22 +69,22 @@ Route::middleware(['auth', 'checkRole:admin'])->group(function () {
     })->name('empleados.search');
 
     Route::get('/empleados/searchEmpleado', [EmpleadoController::class, 'buscarEmpleado']);
-    
+
     //Obtenemos automaticamente las rutas asociadas a empleados
     Route::resource('empleados', EmpleadoController::class);
 
 
 
-   
-    Route::get('/facturacion', [FacturacionController::class, 'mostrarFormulario']);
-    
 
-   // Route::get('facturaciones/pagar', [PayPalController::class, 'mostrarFormulario']);
+    Route::get('/facturacion', [FacturacionController::class, 'mostrarFormulario']);
+
+
+    // Route::get('facturaciones/pagar', [PayPalController::class, 'mostrarFormulario']);
 
     //Route::get('facturaciones/procesar-pago', [PayPalController::class, 'procesarPago']);
 
 
-    Route::get('/galeria', [GaleriaController::class,'index']);
+    Route::get('/galeria', [GaleriaController::class, 'index']);
 
     Route::resource('galeria', GaleriaController::class);
 
@@ -106,7 +106,7 @@ Route::middleware(['auth', 'checkRole:admin'])->group(function () {
 
     Route::resource('grupos-clases', GrupoController::class);
 
-    Route::get('/generador', function() {
+    Route::get('/generador', function () {
         return view('generador.index');
     });
     //Rutas para el generador de codigo de validacion registro
@@ -121,7 +121,7 @@ Route::middleware(['auth', 'checkRole:admin'])->group(function () {
 
     Route::resource('horarios', HorarioController::class);
 
-    Route::get('/mailTest', function() {
+    Route::get('/mailTest', function () {
         Mail::to('pabloterror99@gmail.com')->send(new EmergencyCallReceived());
 
         return 'Email sent!';
@@ -129,7 +129,7 @@ Route::middleware(['auth', 'checkRole:admin'])->group(function () {
 
 
 
-    Route::get('/admin', function() {
+    Route::get('/admin', function () {
         return view('index');
     });
 
@@ -144,13 +144,29 @@ Route::middleware(['auth', 'checkRole:admin'])->group(function () {
 ██║░░██║███████╗╚██████╔╝██║░╚═╝░██║██║░╚███║╚█████╔╝
 ╚═╝░░╚═╝╚══════╝░╚═════╝░╚═╝░░░░░╚═╝╚═╝░░╚══╝░╚════╝░
 */
-Route::middleware(['suscrito:facturacion','auth', 'checkRole:alumno'])->group(function () {
+Route::middleware(['suscrito:facturacion', 'auth', 'checkRole:alumno'])->group(function () {
     // Rutas para el usuario alumno
-    Route::get('/alumno', [AlumnoController::class,'inicio'])->name('inicioAlumno');
-    Route::post('/mas-tarde', [FacturacionController::class,'masTarde'])->name('masTarde');
+    Route::get('/home', function() {
+        return redirect()->route('inicioAlumno');
+    });
+    Route::get('/', function () {
+        return redirect()->route('inicioAlumno');
+    });
+    Route::get('/alumno', [AlumnoController::class, 'registroAlumno'])->name('registroAlumno');
+    Route::get('/perfil/{alumno}', [AlumnoController::class, 'mostrarPerfil'])->name('inicioAlumno');
+    Route::post('/registrarAlumno', [AlumnoController::class, 'registrarAlumno'])->name('registro');
+    Route::post('/mas-tarde', [FacturacionController::class, 'masTarde'])->name('masTarde');
     Route::get('/facturacionAlumno/{tiempoTranscurrido}/{segundosDesdeCreacion}', [FacturacionController::class, 'mostrarFacturacion'])->name('facturacionAlumno');
+    Route::get('/checkout', [FacturacionController::class, 'mostrarCheckout'])->name('checkout');
     Route::post('/checkout', [FacturacionController::class, 'mostrarCheckout'])->name('checkout');
 
+    Route::get("/success", function(){
+        return view("facturaciones.success");
+    })->name('success');
+    Route::get('/error', function() {
+        return view('facturaciones.error');
+        })->name('error');
+    Route::post('/verficacionPago',[FacturacionController::class, 'verificarDatos'])->name('verificarPago');
 });
 
 
@@ -169,23 +185,23 @@ Route::middleware(['auth', 'checkRole:empleado'])->group(function () {
         return view('Empleado.create');
     });
 
-    Route::get('/empleados', function() {
+    Route::get('/empleados', function () {
         return view('Empleado.index');
     });
 
-    Route::get('/empleado', [EmpleadoController::class,'inicio'])->name('inicioEmpleado');
+    Route::get('/empleado', [EmpleadoController::class, 'inicio'])->name('inicioEmpleado');
 });
 
 
 
 
 
-Route::post('/logout', [LoginController::class,'logout'])->name('logout');
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 
 //Para que si ponemos la ruta principal haya que iniciar sesion en la pagina
 //Route::get('/', function () {
-  //  return view('auth.login');
+//  return view('auth.login');
 //});
 
 
@@ -198,10 +214,10 @@ Auth::routes(['register' => true, 'reset' => false]);
 
 //Hacemos que se redirija al index global cuando se inicie sesion
 Route::group(['middleware' => 'auth'], function () {
-    
+
 });
 Route::group(['middleware' => 'auth'], function () {
-    
+
 });
 
 //Para acceder a la funcion asociada a buscar el alumno

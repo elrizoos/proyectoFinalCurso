@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Alumno;
 use App\Models\Grupo;
-use App\Models\Image;
+use App\Models\Horario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -17,6 +18,61 @@ class AlumnoController extends Controller
     public function inicio(Request $request){
         return view('alumnos.perfil');
     }
+
+    public function registroAlumno(Request $request) {
+        
+        $user = $request->input('user');
+        return view('Alumno.register', compact('user'));
+    }
+
+    public function registrarAlumno(Request $request) {
+        if($request->session()->has('user')){
+            $user = $request->session()->get('user');
+        }
+        $emailUser = $user->email;
+        //dd($idUser);
+        $user = User::where('email', '=', $emailUser)->first();
+        //dd($user);
+       
+        $nombre = $user->name;
+        $password = $user->password;
+    
+        $data = [
+            'nombre' => $nombre,
+            'apellidos' => $request->input('apellidos'),
+            'dni' => $request->input('dni'),
+            'telefono' => $request->input('telefono'),
+            'email' => $emailUser,
+            'fechaNacimiento' => $request->input('fechaNacimiento'),
+            'direccion' => $request->input('direccion'),
+            'foto' => 'storage/' . $request->file('foto')->store('uploads', 'public'),
+            'codigoGrupo' => 0,
+            'password' => $password,
+
+        ];
+        if ($request->hasFile('foto')) {
+            $fotoPath = $request->file('foto')->store('uploads', 'public');
+            $data['foto'] = 'storage/' . $fotoPath;
+        }
+        //dd($data);
+        Alumno::insert($data);
+        return redirect()->route('inicioAlumno', ['alumno' => $emailUser]);
+    }
+
+    public function mostrarPerfil($alumno){
+        $alumno = Alumno::where('email', '=', $alumno)->first();
+        $asistencias = $alumno->obtenerAsistencias();
+        //dd($alumno->codigoGrupo);
+        if($alumno->codigoGrupo === 0){
+            $horariosMañana = 0;
+        } else {
+            $horariosMañana = Horario::where('codigoGrupo', '=', $alumno->codigoGrupo)->get();
+        }
+        //dd($horariosMañana);
+        return view('Alumno.perfil', compact('alumno', 'asistencias', 'horariosMañana'));
+    }
+
+    
     public function index(Request $request)
     {
         $column = $request->input('columna', 'id'); // Columna de ordenamiento predeterminada
