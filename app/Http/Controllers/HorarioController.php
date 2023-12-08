@@ -221,7 +221,7 @@ class HorarioController extends Controller
 
             $primerDia = $fecha->modify('-' . ($fechaDia - 1) . ' days'); //Obtiene el valor del primer dia de la semana
             $primerDia = $primerDia->format('Y-m-d'); //Pasa a formato fecha
-            //dump($fechaInicio);
+            //dd($fechaInicio);
             $primerDiaSemana = new DateTime($primerDia); //Creamos el valor de primer dia de la semana
 
 
@@ -243,7 +243,7 @@ class HorarioController extends Controller
                 return back()->with('error', 'La fecha seleccionada no coincide con ninguno de los días seleccionados.');
             }
 
-            //dump($diaIngresado !== $diasSeleccionadosInEnglish[0]);
+            //dd($diaIngresado !== $diasSeleccionadosInEnglish[0]);
             //Comprobamos si el primer dia seleccionado no coincide con la fecha dada
             if ($diaIngresado !== $diasSeleccionadosInEnglish[0]) {
                 $datosHorario = $datosHorarioBase; //Asigna los datos base a la variable nueva

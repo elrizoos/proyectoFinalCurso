@@ -16,7 +16,7 @@
             <a href="{{ url('alumnos/create') }}" class="btn btn-success">Crear nuevo alumno</a>
             <br><br>
             <table id="tablaAlumnos" class="table text-center align-middle table-striped-columns table-responsive fs-6"
-                style="position: absolute;left:5%; width:90%">
+                >
                 <thead class="table-light ">
                     <th>Foto</th>
                     <th> <a href="{{ route('alumnos.index', ['columna' => 'id', 'direccion' => $direccion == 'asc' && $columna == 'id' ? 'desc' : 'asc']) }}">ID</a></th>

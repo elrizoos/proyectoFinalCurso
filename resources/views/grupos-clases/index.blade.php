@@ -23,7 +23,7 @@
                         <a href="{{ url('grupos-clases/grupos/create') }}" class="btn btn-success">Crear nuevo grupo</a>
                         <br><br>
                         <table class="table text-center align-middle table-striped-columns table-responsive fs-6"
-                            style="left:5%; width:100%">
+                            >
                             <thead class="table-light ">
 
                                 <th>ID</th>
@@ -74,7 +74,7 @@
                     <a href="{{ url('grupos-clases/clases/create') }}" class="btn btn-success">Crear nueva clase</a>
                     <br><br>
                     <table class="table text-center align-middle table-striped-columns table-responsive fs-6"
-                        style="position: absolute;left:5%; width:90%">
+                        >
                         <thead class="table-light ">
 
                             <th>ID</th>

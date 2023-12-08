@@ -7,47 +7,53 @@
     <title>Document</title>
 </head>
 <body>
-     @extends('layouts.app', ['modo' => 'empleado:'])
-    @section('content')
-    <div class="container">
-        <div class="contenedorTarjeta">
-            <div class="row">
-                <div class="col">
-                    <div class="imagen">
-                        <div class="foto">
-                            foto: {{$empleado}}
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="datos">
-                        <ul>
-                            <li></li>
-                            <li></li>
-                            <li></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <div class="menu">
-                        <ul>
-                            <li></li>
-                            <li></li>
-                            <li></li>
-                            <li></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="contenidoCambiante">
+   @extends('layouts.app')
 
-                </div>
-            </div>
+@section('content')
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            Detalles del Empleado
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">{{ $empleado->nombre }} {{ $empleado->apellidos }}</h5>
+            <p class="card-text">
+                <strong>DNI:</strong> {{ $empleado->dni }}<br>
+                <strong>Teléfono:</strong> {{ $empleado->telefono }}<br>
+                <strong>Email:</strong> {{ $empleado->email }}<br>
+                <strong>Fecha de Nacimiento:</strong> {{ $empleado->fechaNacimiento }}<br>
+                <strong>Dirección:</strong> {{ $empleado->direccion }}<br>
+                <strong>Código de Clase:</strong> {{ $empleado->codigoClase }}
+            </p>
+            <a href="{{ url( $empleado->foto) }}" target="_blank">
+                <img src="{{ url( $empleado->foto) }}" class="img-fluid img-thumbnail" alt="Foto de {{ $empleado->nombre }}">
+            </a>
         </div>
     </div>
-    @endsection
+    <h2>Lista de Alumnos</h2>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Edad</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Aquí se insertarán las filas de la tabla con los datos de los alumnos -->
+                <!-- Suponiendo que tienes un array de alumnos en PHP -->
+                
+                @foreach ($alumnos as $alumno)
+                    <tr>
+                        <td>{{$alumno->nombre}}</td>
+                        <td>{{$alumno->apellidos}}</td>
+                        <td>{{$alumno->email}}</td>
+                    </tr>
+                @endforeach
+                
+            </tbody>
+        </table>
+</div>
+@endsection
 </body>
 </html>

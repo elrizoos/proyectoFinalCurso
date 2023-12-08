@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('invitation_codes', function (Blueprint $table) {
+        Schema::create('reservas', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->unique();
-            $table->boolean('used')->default(false);
-            $table->timestamps();
+            $table->unsignedBigInteger('id_alumno');
+            $table->unsignedBigInteger('id_horario');
+            $table->foreign('id_alumno')->references('id')->on('alumnos');
+            $table->foreign('id_horario')->references('id')->on('horarios');
         });
     }
 
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('invitation_codes');
+        //
     }
 };

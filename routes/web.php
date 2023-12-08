@@ -10,6 +10,7 @@ use App\Http\Controllers\GrupoController;
 use App\Http\Controllers\ClaseController;
 use App\Http\Controllers\HorarioController;
 use App\Http\Controllers\PayPalController;
+use App\Http\Controllers\UsuarioController;
 use App\Mail\EmergencyCallReceived;
 use Illuminate\Support\Facades\Route;
 
@@ -60,16 +61,15 @@ Route::middleware(['auth', 'checkRole:admin'])->group(function () {
 
 
     //Cuando escribamos en la url empleados nos redirige a la vista index de empleados
-    Route::get("/empleados", function () {
-        return view('empleados.index');
-    });
+    Route::get("/gestionEmpleados", [EmpleadoController::class, 'index']
+    )->name('gestionEmplead');
 
     Route::get("/empleados/search", function () {
         return view('empleados.search');
     })->name('empleados.search');
 
     Route::get('/empleados/searchEmpleado', [EmpleadoController::class, 'buscarEmpleado']);
-
+    Route::get('empleados/obtener-empleados', [AlumnoController::class, 'obtenerEmpleados']);
     //Obtenemos automaticamente las rutas asociadas a empleados
     Route::resource('empleados', EmpleadoController::class);
 
@@ -78,6 +78,8 @@ Route::middleware(['auth', 'checkRole:admin'])->group(function () {
 
     Route::get('/facturacion', [FacturacionController::class, 'mostrarFormulario']);
 
+    Route::get('/facturas', [FacturacionController::class, 'mostrarFacturas']);
+    Route::get('/facturas/descargar/{nombre}', [FacturacionController::class, 'descargaFactura'])->name('descargar.factura');
 
     // Route::get('facturaciones/pagar', [PayPalController::class, 'mostrarFormulario']);
 
@@ -108,18 +110,20 @@ Route::middleware(['auth', 'checkRole:admin'])->group(function () {
 
     Route::get('/generador', function () {
         return view('generador.index');
-    });
+    })->name('generador');
     //Rutas para el generador de codigo de validacion registro
     Route::get('/generadorCodigo', [CodigoValidacionController::class, 'generateInvitationCode'])->name('generadorCodigo');
 
 
     //Ruta para acceder al formulario de edicion del registro
-    Route::get("horarios/edit/{dia}/{tramo}/{fecha}/{id}", [HorarioController::class, 'edit']);
+    Route::get("/horarios/edit/{dia}/{tramo}/{fecha}/{id}", [HorarioController::class, 'edit']);
 
     //Ruta para acceder al formulario de Horario(create) mediante el botón disponible en la casilla vacia del horario
-    Route::get("horarios/create/{dia}/{tramo}/{fecha}", [HorarioController::class, 'createPredefinido']);
+    Route::get("/horarios/create/{dia}/{tramo}/{fecha}", [HorarioController::class, 'createPredefinido']);
 
     Route::resource('horarios', HorarioController::class);
+
+    Route::get('/list', [UsuarioController::class, 'mostrarNotificaciones'])->name('notificaciones');
 
     Route::get('/mailTest', function () {
         Mail::to('pabloterror99@gmail.com')->send(new EmergencyCallReceived());
@@ -131,7 +135,7 @@ Route::middleware(['auth', 'checkRole:admin'])->group(function () {
 
     Route::get('/admin', function () {
         return view('index');
-    });
+    })->name('inicio');
 
 
 });
@@ -167,6 +171,7 @@ Route::middleware(['suscrito:facturacion', 'auth', 'checkRole:alumno'])->group(f
         return view('facturaciones.error');
         })->name('error');
     Route::post('/verficacionPago',[FacturacionController::class, 'verificarDatos'])->name('verificarPago');
+    Route::get('/reservarClase/{horario}/{alumno}', [AlumnoController::class, 'reservarClase'])->name('reservarClase');
 });
 
 
@@ -189,7 +194,12 @@ Route::middleware(['auth', 'checkRole:empleado'])->group(function () {
         return view('Empleado.index');
     });
 
-    Route::get('/empleado', [EmpleadoController::class, 'inicio'])->name('inicioEmpleado');
+
+    Route::get('/mostrarRegistro',[EmpleadoController::class, 'mostrarRegistro'])->name('mostrarRegistro');
+    Route::post('/registrarEmpleado', [EmpleadoController::class, 'registrarEmpleado'])->name('registrarEmpleado');
+    Route::get('/controlAlumnos', [EmpleadoController::class, 'mostrarControl'])->name('controlAlumnos');
+
+    Route::get('/empleado/{empleado}', [EmpleadoController::class, 'inicio'])->name('inicioEmpleado');
 });
 
 

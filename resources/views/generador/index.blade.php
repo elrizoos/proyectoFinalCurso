@@ -25,11 +25,6 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="userType">Rol:</label>
-                            <select name="userType" class="form-control" id="userType" required>
-                                <option value="empleado">Empleado</option>
-                                <option value="alumno">Alumno</option>
-                            </select>
                         </div>
 
                         <button id="enviar" type="submit">Generar Código</button>

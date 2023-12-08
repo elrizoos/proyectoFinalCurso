@@ -11,12 +11,13 @@
 <body>
     @extends('layouts.app', ['modo' => 'Ver participantes'])
     @section('content')
+        <header>
+            <h1>Participantes -- Grupo {{ $grupo }}</h1>
+        </header>
         <div class="container">
             @if (Session::has('mensaje'))
                 {{ Session::get('mensaje') }}
             @endif
-            <h1>Participantes -- Grupo {{ $grupo }}</h1>
-
             <br><br>
             <div class="row">
                 <div class="col col-12">
@@ -91,7 +92,8 @@
                                                 name="alumnos-seleccionados[]" value="{{ $alumno->id }}">
                                             <label class="form-check-label"
                                                 for="alumno_{{ $alumno->id }}">{{ $alumno->nombre }}
-                                                {{ $alumno->apellidos }} ---- Dni: {{ $alumno->dni }} ---- Grupo: {{$alumno->codigoGrupo}} </label>
+                                                {{ $alumno->apellidos }} ---- Dni: {{ $alumno->dni }} ---- Grupo:
+                                                {{ $alumno->codigoGrupo }} </label>
                                         </div>
                                     </div>
                                 @endforeach

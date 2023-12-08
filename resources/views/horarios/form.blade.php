@@ -11,6 +11,11 @@
                </ul>
            </div>
        @endif
+       @if (session('error'))
+           <div class="alert alert-danger">
+               {{ session('error') }}
+           </div>
+       @endif
        <!-- Lista desplegable para Clases -->
        <label for="codigoClase">Clase: </label>
        <select name="codigoClase" class="form-control">
@@ -128,7 +133,7 @@
        <div class="form-group">
            <label for="repeticiones">Repeticiones: </label>
            <input type="number" class="form-control" name="repeticiones" id="repeticiones"
-               value="{{ isset($horario->repeticiones) ? $horario->repeticiones : old('repeticiones') }}">
+               value="{{ isset($horario->repeticiones) ? $horario->repeticiones : old('repeticiones', 0) }}">
        </div>
 
        <div class="form-group">

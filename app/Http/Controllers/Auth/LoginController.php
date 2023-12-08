@@ -3,9 +3,14 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+
+use App\Models\Alumno;
+use App\Models\Empleado;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use Auth;
 
 class LoginController extends Controller
 {
@@ -27,8 +32,8 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/';
-    protected $name = "";
+    protected $redirectTo = '/'; //Creando una variable de redireccion por defecto
+    protected $name = ""; //Inicializando la variable para el nombre de la ruta "route()"
 
     /**
      * Create a new controller instance.
@@ -39,26 +44,64 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+
+    /**
+     * Método de autenticación de usuario el cual, dependiendo del rol, será redireccionado a una página u otra.
+     *
+     * @param Request $request
+     * @param $user
+     * @return \Illuminate\Http\RedirectResponse
+     */
     protected function authenticated(Request $request, $user)
     {
         // Redirigir según el rol del usuario después de iniciar sesión
         if ($user->role === 'admin') {
-            $this->redirectTo = '/admin';
-            return redirect($this->redirectTo);
+            return redirect()->route('inicio');
         } elseif ($user->role === 'alumno') {
-            $this->name = "inicioAlumno";
-        } elseif ($user->role === 'empleado') {
-            $this->redirectTo = '/empleado';
+            return redirect()->route('inicioAlumno', ['alumno' => $user->email]);
+        } elseif ($user->role === 'empleado') { // Corregido para usar elseif y añadir llaves
+            return redirect()->route('inicioEmpleado', ['empleado' => $user->email]);
         }
 
-        return redirect()->route($this->name, ['alumno' => $user->id]);
+    }
+    /**
+     * Metodo para salir de la app y cerrar sesion
+     * 
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+
+    public function logout(Request $request)
+    {
+        $user = Auth::user();
+        $this->guard()->logout(); //Salir de la aplicacion
+
+        $request->session()->invalidate(); //Cerrar sesion
+
+        $user->last_login_at = Carbon::now(); //Actualizar ultimo inicio de sesion
+        $user->save(); //Guardar en la base de datos
+        return redirect('/login');
     }
 
-    public function logout(Request $request) {
-        $this->guard()->logout();
-        
-        $request->session()->invalidate();
+    /**
+     * Metodo que sirve para obtener los datos necesarios para mostrar al admin las notificaciones de cambios en la bd (Alumnos y Empleados)
+     * 
+     * @return array
+     */
+    public function mostrarCambios()
+    {
+        $user = Auth::user();
+        $lastLoginAt = Carbon::parse($user->last_login_at);
+        $cambiosAlumnos = Alumno::where('updated_at', '>', $lastLoginAt)->get();
+        $cambiosEmpleados = Empleado::where('updated_at', '>', $lastLoginAt)->get();
 
-        return redirect('/login');
+        $cambios = [
+            $cambiosAlumnos,
+            $cambiosEmpleados
+        ];
+
+        return $cambios;
+
+
     }
 }

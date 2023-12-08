@@ -53,26 +53,19 @@ class RegisterController extends Controller
     /**
      * Get a validator for an incoming registration request.
      *
+     * Comprueba si se ha introducido el codigo valido o no
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
-
-
-
-
     protected function validator(array $data): ValidatorContract
     {
         $opcionCodigo = "";
-        
         $code = $data['code'];
-
         $invitation = InvitationCode::where('code', $code)
             ->where('used', 0)
             ->first();
-
         if (isset($data['codigoUse'])) {
             $opcionCodigo = $data['codigoUse'];
-
             if (!$invitation) {
                 throw ValidationException::withMessages([
                     'code' => ['El código de invitación no es válido.'],
@@ -85,7 +78,6 @@ class RegisterController extends Controller
                 'password' => ['required', 'string', 'min:8', 'confirmed'],
                 'role' => ['required', 'string', new MatchInvitationRole($invitation->role)]
             ];
-
             $messages = [
                 'required' => 'El campo :attribute es obligatorio.',
                 'string' => 'El campo :attribute debe ser una cadena de texto.',
@@ -100,7 +92,7 @@ class RegisterController extends Controller
 
             return $validator;
         } else {
-//dd($invitation);
+            //dd($invitation);
             $rules = [
                 'name' => ['required', 'string', 'max:255'],
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
@@ -108,7 +100,6 @@ class RegisterController extends Controller
                 'role' => ['required', 'string', 'in:admin,alumno,empleado'],
 
             ];
-
             $messages = [
                 'required' => 'El campo :attribute es obligatorio.',
                 'string' => 'El campo :attribute debe ser una cadena de texto.',
@@ -117,9 +108,9 @@ class RegisterController extends Controller
                 'unique' => 'El correo electrónico ya está registrado.',
                 'confirmed' => 'La confirmación de la contraseña no coincide.',
             ];
+
             return Validator::make($data, $rules, $messages);
         }
-
     }
 
     protected function create(array $data)
@@ -139,15 +130,15 @@ class RegisterController extends Controller
                 'password' => Hash::make($data['password']),
                 'role' => $data['role'],
                 'verificado' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
         } else {
             $user = $this->createCustom($data);
             return $user;
         }
 
-        // ... (código de marcado del código de invitación como usado, etc.)
 
-        // Redirigir a la página del usuario recién creado
 
     }
 
@@ -159,12 +150,15 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
             'role' => $data['role'],
             'verificado' => 0,
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
 
     }
     protected function registered(Request $request, $user)
     {
+        // Redirigir según el rol del usuario después de registrarse
 
         $clases = Clase::all();
         $existeUsuario = $this->comprobarExistencia($user);
@@ -179,28 +173,15 @@ class RegisterController extends Controller
                 $redirectPath = $this->redirectTo;
             }
         } else {
-            /*if ($user->role === 'admin') {
-                $redirectPath = '/admin';
-            } elseif ($user->role === 'alumno') {
-                $redirectPath = '/alumno/create';
-            } elseif ($user->role === 'empleado') {
-                $redirectPath = '/empleado/create';
-            } else {
-                $redirectPath = $this->redirectTo;
-            }
-*/
             if ($user->role === 'admin') {
                 $redirectPath = '/admin';
             } elseif ($user->role === 'alumno') {
                 $redirectPath = route('registroAlumno');
             } else {
-                $redirectPath = route('inicioEmpleado');
+                $redirectPath = route('mostrarRegistro');
             }
 
         }
-
-        // Redirigir según el rol del usuario después de registrarse
-
 
         // Almacenar el mensaje informativo en la sesión
         $request->session()->flash('registro_exitoso', 'Registro exitoso. Bienvenido.');

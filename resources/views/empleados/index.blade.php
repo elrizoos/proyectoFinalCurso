@@ -18,19 +18,18 @@
             @endif
             <a href="{{ url('empleados/create') }}" class="btn btn-success">Crear nuevo empleado</a>
             <br><br>
-            <table class="table text-center align-middle table-striped-columns table-responsive fs-6"
-                style="position: absolute;left:5%; width:90%">
+            <table id="tablaEmpleados" class="table text-center align-middle table-striped-columns table-responsive fs-6">
                 <thead class="table-light ">
                     <th>Foto</th>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Apellidos</th>
-                    <th>DNI</th>
-                    <th>Telefono</th>
-                    <th>Email</th>
-                    <th>FechaNacimiento</th>
-                    <th>Direccion</th>
-                    <th>CodigoClase</th>
+                    <th> <a href="{{ route('gestionEmplead', ['columna' => 'id', 'direccion' => $direccion == 'asc' && $columna == 'id' ? 'desc' : 'asc']) }}">ID</a></th>
+                    <th> <a href="{{ route('gestionEmplead', ['columna' => 'nombre', 'direccion' => $direccion == 'asc' && $columna == 'nombre' ? 'desc' : 'asc']) }}">Nombre</a></th>
+                    <th> <a href="{{ route('gestionEmplead', ['columna' => 'apellidos', 'direccion' => $direccion == 'asc' && $columna == 'apellidos' ? 'desc' : 'asc']) }}">Apellidos</a></th>
+                    <th> <a href="{{ route('gestionEmplead', ['columna' => 'dni', 'direccion' => $direccion == 'asc' && $columna == 'dni' ? 'desc' : 'asc']) }}">DNI</a></th>
+                    <th> <a href="{{ route('gestionEmplead', ['columna' => 'telefono', 'direccion' => $direccion == 'asc' && $columna == 'telefono' ? 'desc' : 'asc']) }}">Telefono</a></th>
+                    <th> <a href="{{ route('gestionEmplead', ['columna' => 'email', 'direccion' => $direccion == 'asc' && $columna == 'email' ? 'desc' : 'asc']) }}">Email</a></th>
+                    <th> <a href="{{ route('gestionEmplead', ['columna' => 'fechaNacimiento', 'direccion' => $direccion == 'asc' && $columna == 'fechaNacimiento' ? 'desc' : 'asc']) }}">fechaNacimiento</a></th>
+                    <th> <a href="{{ route('gestionEmplead', ['columna' => 'direccion', 'direccion' => $direccion == 'asc' && $columna == 'direccion' ? 'desc' : 'asc']) }}">direccion</a></th>
+                    <th> <a href="{{ route('gestionEmplead', ['columna' => 'codigoGrupo', 'direccion' => $direccion == 'asc' && $columna == 'codigoGrupo' ? 'desc' : 'asc']) }}">codigoGrupo</a></th>
                     <th>Opciones</th>
                 </thead>
                 <tbody>
@@ -70,8 +69,11 @@
                         </tr>
                     @endforeach
                 </tbody>
-                {{ $empleados->links('pagination::bootstrap-4') }}
+                
             </table>
+            <div id="paginacion" class="pagination-container">
+                {{ $empleados->appends(request()->input())->links('pagination::bootstrap-4') }}
+                </div>
         </div>
     @endsection
 </body>

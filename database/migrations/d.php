@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('invitation_codes', function (Blueprint $table) {
-            $table->id();
-            $table->string('code')->unique();
-            $table->boolean('used')->default(false);
-            $table->timestamps();
-        });
+       Schema::table('facturas', function (Blueprint $table) {
+           $table->float('referencia')->change();
+       });
     }
 
     /**
@@ -24,6 +21,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('invitation_codes');
+        //
     }
 };

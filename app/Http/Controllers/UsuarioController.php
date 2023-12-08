@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Usuario;
+use App\Models\Alumno;
+use App\Models\Empleado;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use Auth;
 
 class UsuarioController extends Controller
 {
@@ -61,5 +65,14 @@ class UsuarioController extends Controller
     public function destroy(Usuario $usuario)
     {
         //
+    }
+
+    public function mostrarNotificaciones(){
+        $user = Auth::user();
+        $lastLoginAt = Carbon::parse($user->last_login_at);
+        $cambiosAlumnos = Alumno::where('updated_at', '>', $lastLoginAt)->get();
+        $cambiosEmpleados = Empleado::where('updated_at', '>', $lastLoginAt)->get();
+        return view('notificaciones.list', compact('cambiosAlumnos', 'cambiosEmpleados'));
+
     }
 }

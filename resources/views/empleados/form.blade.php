@@ -11,10 +11,6 @@
                </ul>
            </div>
        @endif
-
-       @php
-           $clases = session('clases')
-       @endphp
        <div class="col col-10">
            <div class="row row-12">
                <div class="form-group col col-8">
@@ -44,7 +40,8 @@
                    <input class="form-control" type="text" name="email" id="email"
                        value="{{ isset($empleado->email) ? $empleado->email : old('email') }}">
                </div>
-               <div class="form-group">
+               @if ($modo !== 'Editar')
+                   <div class="form-group">
                    <label for="password">Contraseña:</label>
                    <input type="password" name="password" id="password" class="form-control"
                        value="{{ isset($empleado->password) ? $empleado->password : old('password') }}">
@@ -55,6 +52,7 @@
                    <input type="password" name="password_confirmation" id="password_confirmation" class="form-control"
                        value="{{ isset($empleado->password) ? $empleado->password : old('password') }}">
                </div>
+               @endif
                <div class="form-group col col-4">
                    <label for="fechaNacimiento">Fecha Nacimeinto: </label><br>
                    <input type="date" name="fechaNacimiento" id="fechaNacimiento"
@@ -89,7 +87,7 @@
                <label for="foto"> </label>
                @if (isset($empleado->foto))
                    <img class="img-thumbnail img-fluid" width="100px" height="100px"
-                       src="{{ asset('storage') . '/' . $empleado->foto }}" alt="Imagen del usuario">
+                       src="{{ asset($empleado->foto) }}" alt="Imagen del usuario">
                @endif
            </div>
            <div class="form-group">
@@ -98,6 +96,6 @@
            <div class="form-group">
                <input class="btn btn-success" type="submit" value="{{ $modo }} datos empleado">
 
-               <a class="btn btn-primary" href="{{ url('empleados/') }}">Regresar</a>
+               <a class="btn btn-primary" href="{{ url('/gestionEmpleados') }}">Regresar</a>
            </div>
        </div>

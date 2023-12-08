@@ -13,23 +13,21 @@ class CodigoValidacionController extends Controller
     {
         $code = strtoupper(Str::random(8));
         $email = $request->input('email');
-        $userType = $request->input("userType");
         InvitationCode::create([
             'code' => $code,
             'used' => false,
-            'role' => $userType,
             'email' => $email,
         ]);
 
         // Obtén el correo electrónico del usuario de alguna manera, por ejemplo, desde un formulario
         $userEmail = $request->input('email');
         //dd($userEmail);
-        $this->enviarCodigo($userEmail, $code, $userType);
+        $this->enviarCodigo($userEmail, $code);
 
         return $code;
     }
 
-    public function enviarCodigo($userEmail, $code, $userType)
+    public function enviarCodigo($userEmail, $code)
     {
         //dd($userEmail);
         Mail::to($userEmail)->send(new EmergencyCallReceived($code, $userEmail));

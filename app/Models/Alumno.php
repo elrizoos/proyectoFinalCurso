@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Alumno extends Model
 {
     use HasFactory;
+    public $timestamps = true;
     public function asistencias()
     {
         return $this->hasMany(Asistencia::class);
@@ -19,6 +20,6 @@ class Alumno extends Model
         //dd($asistencia);
         $numeroAsistencias = $asistencia->count();
        // dd($numeroAsistencias);
-        return $numeroAsistencias;
+        return ['numeroAsistencias' => $numeroAsistencias, 'asistencias' => $asistencia];
     }
 }

@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Barryvdh\DomPDF\Facade\Pdf;
+
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use App\Models\Factura;
+use Illuminate\Support\Facades\Storage;
 
 class FacturacionController extends Controller
 {
@@ -39,13 +43,13 @@ class FacturacionController extends Controller
                 'stripeToken' => 'required'
             ]);
 
-        } catch (ValidationException $e){
+        } catch (ValidationException $e) {
             return view('facturaciones.checkout')
                 ->withErrors($e->validator)
                 ->with([
                     'producto' => $producto,
                     'stripeKey' => env('STRIPE_KEY'),
-            ]);
+                ]);
         }
         $precio = $request->input('precio') * 100;
         try {
@@ -61,7 +65,28 @@ class FacturacionController extends Controller
                 $user = Auth::user();
                 $user->verificado = 1;
                 $user->save();
-                return redirect('/success');
+                do {
+                    $fecha = date('Ymd'); // Fecha actual en formato año-mes-día
+                    $numeroAleatorio = rand(1000, 9999); // Número aleatorio entre 1000 y 9999
+                    $numeroReferencia = $fecha . $numeroAleatorio;
+
+                    $existe = Factura::where('referencia', $numeroReferencia)->exists();
+                } while ($existe);
+                Factura::insert([
+                    'referencia' => $numeroReferencia,
+                    'id_usuario' => $user->id,
+                    'fecha' => now(),
+                    'importe' => $precio,
+                ]);
+                $datosFactura = [
+                    'referencia' => $numeroReferencia,
+                    'id_usuario' => $user->id,
+                    'fecha' => now(),
+                    'importe' => $precio,
+                    'producto' => $producto,
+                ];
+                return $this->descargarFactura($datosFactura);
+                //return redirect('/success');
             } else {
                 // Redirigir a la página de error
                 return redirect('/error');
@@ -76,9 +101,66 @@ class FacturacionController extends Controller
 
     public function mostrarCheckout(Request $request)
     {
-        $producto = $request->input('producto');
-        session(['producto' => $producto]);
-        return view('facturaciones.checkout', ['stripeKey' => env('STRIPE_KEY')]);
+        $user = Auth::user();
+        if(!$user->verificado){
+            $producto = $request->input('producto');
+            session(['producto' => $producto]);
+            return view('facturaciones.checkout', ['stripeKey' => env('STRIPE_KEY')]);
+        } else {
+            return redirect()->route('inicioAlumno', $user->email);
+        }
 
     }
+
+    public function descargarFactura($datosFactura)
+    {
+        //dd($datosFactura);
+        $pdf = PDF::loadView('facturaciones.generadorFactura', $datosFactura);
+        $content = $pdf->output();
+        try {
+           
+            $nombreArchivo = 'factura-' . $datosFactura['referencia'] . '.pdf';
+            Storage::disk('local')->put('pdf/' . $nombreArchivo, $content);
+            return $pdf->download($nombreArchivo);
+        } catch (\Throwable $th) {
+            dd("error");
+        }
+
+    }
+
+    public function mostrarFacturas()
+    {
+        $archivos = collect(Storage::disk('local')->files('pdf'))
+            ->map(function ($archivo) {
+                return [
+                    'nombre' => basename($archivo),
+                    'referencia' => $this->extraerReferencia($archivo)
+                ];
+            });
+
+        return view('facturaciones.facturas', ['facturas' => $archivos]);
+    }
+
+    public function descargaFactura($nombre)
+    {
+        $path = 'pdf/' . $nombre;
+
+        if (!Storage::disk('local')->exists($path)) {
+            abort(404);
+        }
+
+        return Storage::disk('local')->download($path);
+    }
+    private function extraerReferencia($archivo)
+    {
+        // Elimina la extensión '.pdf'
+        $archivoSinExtension = substr($archivo, 0, -4);
+
+        // Encuentra la posición del guion después de 'factura-'
+        $posicionGuion = strpos($archivoSinExtension, '-') + 1;
+
+        // Extrae la referencia desde la posición del guion hasta el final
+        return substr($archivoSinExtension, $posicionGuion);
+    }
+
 }

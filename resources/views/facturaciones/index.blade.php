@@ -6,44 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Facturación</title>
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
-    <style>
-        body {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f4f4f4;
-        }
-
-        .tarifa {
-            width: 250px;
-            height: 250px;
-            padding: 20px;
-            margin: 10px;
-            text-align: center;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .tarifa-basica {
-            background-color: #3498db;
-            color: #fff;
-        }
-
-        .tarifa-premium {
-            background-color: #2ecc71;
-            color: #fff;
-        }
-
-        .tarifa-flex {
-            background-color: #e74c3c;
-            color: #fff;
-        }
-    </style>
+    
 </head>
 
 <body>
+    @extends('layouts.app')
+    @section('content')
     <div id="tiempoTranscurrido" data-tiempo="{{ $segundosDesdeCreacion }}"></div>
 
    @foreach ($productos as $producto)
@@ -71,7 +39,7 @@
         </form>
         <span id="contador">Tiempo restante: </span>
     </div>
-
+@endsection
     <script>
         var tiempoTranscurrido = document.querySelector('#tiempoTranscurrido').dataset.tiempo;
         let tiempoTotal = 72 * 60 * 60; // 72 horas en segundos

@@ -164,27 +164,28 @@
     <script src="https://js.stripe.com/v3/"></script>
     <script>
         function cambiarFormaPago() {
-            $formaPago = document.querySelector('#formaPago').checked;
-            $precioProducto = document.querySelector('#precioProducto');
-            $textoForma = document.querySelector('#textoForma');
-            $precioElegido = document.querySelector('#precio');
-            $mensualAnual = document.querySelector('#mensualAnual');
+            formaPago = document.querySelector('#formaPago').checked;
+            precioProducto = document.querySelector('#precioProducto');
+            textoForma = document.querySelector('#textoForma');
+            precioElegido = document.querySelector('#precio');
+            mensualAnual = document.querySelector('#mensualAnual');
 
 
             console.log($mensualAnual.value)
             if ($formaPago === true) {
-                $precioProducto.innerText =
+                precioProducto.innerText =
                     '{{ isset($producto['precioAnual']) ? $producto['precioAnual'] : old('precioAnual') }}';
-                $textoForma.innerText = 'Pago Anual';
-                $precioElegido.value = '{{ isset($producto['precioAnual']) ? $producto['precioAnual'] : old('precioAnual') }}';
-                $mensualAnual.value = 'anual';
+                textoForma.innerText = 'Pago Anual';
+                precioElegido.value = '{{ isset($producto['precioAnual']) ? $producto['precioAnual'] : old('precioAnual') }}';
+                
+                mensualAnual.value = 'anual';
             } else {
-                $precioProducto.innerText =
+                precioProducto.innerText =
                     '{{ isset($producto['precioMensual']) ? $producto['precioMensual'] : old('precioMensual') }}';
-                $textoForma.innerText = 'Pago Mensual';
-                $precioElegido.value =
+                textoForma.innerText = 'Pago Mensual';
+                precioElegido.value =
                     '{{ isset($producto['precioMensual']) ? $producto['precioMensual'] : old('precioMensual') }}';
-                $mensualAnual.value = 'mensual';
+                mensualAnual.value = 'mensual';
             }
         }
         document.addEventListener('DOMContentLoaded', function() {
@@ -192,13 +193,14 @@
             var elements = stripe.elements();
             var card = elements.create('card');
             card.mount('#card-element');
-
+            var precioElegido = document.querySelector('#precio').value;
             var form = document.getElementById('payment-form');
             form.addEventListener('submit', function(event) {
                 event.preventDefault();
                 console.log("dentro de la funcion de form");
                 var producto = {!! json_encode($producto) !!};
-                console.log(producto.nombre);
+                producto['precioElegido'] = precioElegido;
+                console.log(producto);
                 document.querySelector('#producto').value = JSON.stringify(producto);
 
                 stripe.createToken(card).then(function(result) {
@@ -209,6 +211,10 @@
                         // Envía el token a tu servidor.
                         document.getElementById('stripeToken').value = result.token.id;
                         form.submit();
+                        setInterval(() => {
+                            location.reload();
+
+                        }, 5000);
                     }
                 });
             });

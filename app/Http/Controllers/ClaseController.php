@@ -16,7 +16,7 @@ class ClaseController extends Controller
     {
         $pageClases = request('page-clases', 1);
         $pageGrupos = request('page-grupos', 1);
-
+        
         $datos['grupos'] = Grupo::paginate(5, ['*'], 'page-grupos', $pageGrupos)->withQueryString();
         $datos['clases'] = Clase::paginate(5, ['*'], 'page-clases', $pageClases)->withQueryString();
         return view('grupos-clases.index', $datos);

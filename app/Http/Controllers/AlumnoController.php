@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Alumno;
 use App\Models\Grupo;
 use App\Models\Horario;
+use App\Models\Reserva;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -15,28 +16,31 @@ class AlumnoController extends Controller
      * Display a listing of the resource.
      */
 
-    public function inicio(Request $request){
+    public function inicio(Request $request)
+    {
         return view('alumnos.perfil');
     }
 
-    public function registroAlumno(Request $request) {
-        
+    public function registroAlumno(Request $request)
+    {
         $user = $request->input('user');
         return view('Alumno.register', compact('user'));
     }
 
-    public function registrarAlumno(Request $request) {
-        if($request->session()->has('user')){
+    public function registrarAlumno(Request $request)
+    {
+        if ($request->session()->has('user')) {
             $user = $request->session()->get('user');
         }
+
         $emailUser = $user->email;
         //dd($idUser);
         $user = User::where('email', '=', $emailUser)->first();
         //dd($user);
-       
+
         $nombre = $user->name;
         $password = $user->password;
-    
+
         $data = [
             'nombre' => $nombre,
             'apellidos' => $request->input('apellidos'),
@@ -48,31 +52,62 @@ class AlumnoController extends Controller
             'foto' => 'storage/' . $request->file('foto')->store('uploads', 'public'),
             'codigoGrupo' => 0,
             'password' => $password,
-
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
         if ($request->hasFile('foto')) {
             $fotoPath = $request->file('foto')->store('uploads', 'public');
             $data['foto'] = 'storage/' . $fotoPath;
         }
+
         //dd($data);
         Alumno::insert($data);
         return redirect()->route('inicioAlumno', ['alumno' => $emailUser]);
     }
 
-    public function mostrarPerfil($alumno){
+    public function mostrarPerfil($alumno)
+    {
         $alumno = Alumno::where('email', '=', $alumno)->first();
+        //dd($alumno);
         $asistencias = $alumno->obtenerAsistencias();
+        //dd($asistencias);
         //dd($alumno->codigoGrupo);
-        if($alumno->codigoGrupo === 0){
-            $horariosMañana = 0;
+        if ($alumno->codigoGrupo === 0) {
+            $horarioMañana = 0;
+            $horarioTarde = 0;
         } else {
-            $horariosMañana = Horario::where('codigoGrupo', '=', $alumno->codigoGrupo)->get();
+            $horarioMañana = Horario::where('codigoGrupo', '=', $alumno->codigoGrupo)
+            ->where('horaInicio', '<', '14:00:00')
+            ->orderBy('primerDia', 'asc')
+            ->orderBy('horaInicio', 'asc')
+            ->first();
+            
+            if(!$horarioMañana){
+                $horarioMañana = 0;
+            }
+            $horarioTarde = Horario::where('codigoGrupo', '=', $alumno->codigoGrupo)
+                ->where('horaInicio', '>', '14:00:00')
+                ->orderBy('primerDia', 'asc')
+                ->orderBy('horaInicio', 'asc')
+                ->first();
+
+            if (!$horarioTarde) {
+                $horarioTarde = 0;
+            }
         }
-        //dd($horariosMañana);
-        return view('Alumno.perfil', compact('alumno', 'asistencias', 'horariosMañana'));
+
+        $reservas = Reserva::where('id_alumno', '=', $alumno->id)->get();
+        $horariosReservados = [];
+        foreach($reservas as $reserva) {
+            $horario = Horario::where('id', '=', $reserva->id_horario)->first();
+            $horariosReservados[] = $horario;
+            
+        }
+        //dd($horariosReservados);
+        return view('Alumno.perfil', compact('alumno', 'asistencias', 'horarioMañana', 'horarioTarde', 'horariosReservados'));
     }
 
-    
+
     public function index(Request $request)
     {
         $column = $request->input('columna', 'id'); // Columna de ordenamiento predeterminada
@@ -130,12 +165,8 @@ class AlumnoController extends Controller
         if ($request->hasFile('foto')) {
             //dd($request->file('foto'));
             $datosalumno['foto'] = 'storage/' . $request->file('foto')->store('uploads', 'public');
-
-
-
         }
-
-
+        
         Alumno::insert($datosalumno);
 
         // return response()->json($datosalumno);
@@ -172,13 +203,6 @@ class AlumnoController extends Controller
             'dni' => 'required|string|max:100',
             'email' => 'required|email',
             'fechaNacimiento' => 'required|string|max:100',
-            'foto' => 'required|max:10000|mimes:jpeg,png,jpg',
-            'password' => [
-                'required',
-                'min:6',
-                'regex:/([A-Za-z0-9]+(_[A-Za-z0-9]+)+)/i',
-                'confirmed'
-            ],
 
         ];
 
@@ -266,7 +290,7 @@ class AlumnoController extends Controller
     public function obtenerAlumnos(Request $request)
     {
         $columna = $request->input('columna', 'nombre');
-    
+
         $orden = $request->input('orden', 'asc'); // Valor predeterminado a 'asc' si no se proporciona
 
         //dd($columna, $orden);
@@ -280,7 +304,7 @@ class AlumnoController extends Controller
             'current_page' => $alumnos->currentPage(),
             'last_page' => $alumnos->lastPage()
         ];
-    
+
         $responseData = [
             'alumnos' => $alumnosData,
             'pagination' => $pagination,
@@ -288,6 +312,21 @@ class AlumnoController extends Controller
             'orden' => $orden
         ];
         return response()->json($responseData);
+    }
+
+    public function reservarClase($horario, $alumno) {
+        try {
+            Reserva::insert([
+                'id_alumno' => $alumno,
+                'id_horario' => $horario,
+            ]);
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'No se puede volver a reservar la clase');
+        }
+
+        $alumno = Alumno::findOrFail($alumno);
+        $horario = Horario::findOrFail($horario);
+        return redirect()->route('inicioAlumno', $alumno->email)->with('reserva', 'Reservada la clase');
     }
 
 }

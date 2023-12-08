@@ -12,6 +12,7 @@
     @extends('layouts.app', ['modo' => 'Crear'])
 
     @section('content')
+        
         <div class="container">
             <form class="row" action="{{ url('/alumnos') }}" method="POST" enctype="multipart/form-data">
                 @csrf

@@ -13,7 +13,8 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-
+    <link rel="stylesheet" href="{{ asset('css/reset.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
@@ -36,11 +37,11 @@
                             {{ config('app.name', 'Laravel') }}
                         </a>
                     @elseif($user->role === 'empleado')
-                        <a class="navbar-brand" href="{{ route('inicioEmpleado') }}">
+                        <a class="navbar-brand" href="{{ route('inicioEmpleado', ['empleado' => $user->email]) }}">
                             {{ config('app.name', 'Laravel') }}
                         </a>
                     @elseif($user->role === 'admin')
-                        <a class="navbar-brand" href="{{ route('inicioAdmin') }}">
+                        <a class="navbar-brand" href="{{ route('inicio') }}">
                             {{ config('app.name', 'Laravel') }}
                         </a>
                     @else
