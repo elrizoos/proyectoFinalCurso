@@ -29,41 +29,52 @@ class AlumnoController extends Controller
 
     public function registrarAlumno(Request $request)
     {
-        if ($request->session()->has('user')) {
-            $user = $request->session()->get('user');
+        if (!$request->session()->has('user')) {
+            return redirect()->route('rutaAdecuada')->with('error', 'No estás autenticado.');
         }
 
-        $emailUser = $user->email;
-        //dd($idUser);
-        $user = User::where('email', '=', $emailUser)->first();
-        //dd($user);
+        $user = $request->session()->get('user');
 
-        $nombre = $user->name;
-        $password = $user->password;
+        // Calcula la fecha de hace 16 años
+        $fechaHace16Años = now()->subYears(16)->format('Y-m-d');
 
-        $data = [
-            'nombre' => $nombre,
-            'apellidos' => $request->input('apellidos'),
-            'dni' => $request->input('dni'),
-            'telefono' => $request->input('telefono'),
-            'email' => $emailUser,
-            'fechaNacimiento' => $request->input('fechaNacimiento'),
-            'direccion' => $request->input('direccion'),
-            'foto' => 'storage/' . $request->file('foto')->store('uploads', 'public'),
+        // Validación de la solicitud
+        $validatedData = $request->validate([
+            'apellidos' => 'required',
+            'dni' => 'required|unique:alumnos,dni|regex:/^[0-9]{8}[A-Z]$/',
+            'telefono' => 'required|regex:/^[679][0-9]{8}$/',
+            'fechaNacimiento' => 'required|date|before_or_equal:' . $fechaHace16Años,
+            'direccion' => 'required',
+            'foto' => 'required|image',
+            'password' => ['required', 'regex:/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/'],
+        ], [
+             'telefono.regex' => 'El número de teléfono debe comenzar con 6, 7, o 9 y tener un total de 9 dígitos.',
+            'password.regex' => 'La contraseña debe tener al menos 8 caracteres, incluyendo una letra mayúscula, un número y un signo especial.',
+            'dni.regex' => 'El DNI debe tener 8 dígitos seguidos de una letra mayúscula.',
+            'fechaNacimiento.before_or_equal' => 'Debes tener al menos 16 años de edad.'
+        ]);
+        // Manejo de la foto
+        $fotoPath = $request->file('foto')->store('uploads', 'public');
+
+        // Creación del alumno
+        $alumno = new Alumno([
+            'nombre' => $user->name,
+            'apellidos' => $validatedData['apellidos'],
+            'dni' => $validatedData['dni'],
+            'telefono' => $validatedData['telefono'],
+            'email' => $user->email,
+            'fechaNacimiento' => $validatedData['fechaNacimiento'],
+            'direccion' => $validatedData['direccion'],
+            'foto' => 'storage/' . $fotoPath,
             'codigoGrupo' => 0,
-            'password' => $password,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ];
-        if ($request->hasFile('foto')) {
-            $fotoPath = $request->file('foto')->store('uploads', 'public');
-            $data['foto'] = 'storage/' . $fotoPath;
-        }
+            'password' => $user->password,
+        ]);
 
-        //dd($data);
-        Alumno::insert($data);
-        return redirect()->route('inicioAlumno', ['alumno' => $emailUser]);
+        $alumno->save();
+
+        return redirect()->route('inicioAlumno', ['alumno' => $user->email])->with('success', 'Alumno registrado con éxito.');
     }
+
 
     public function mostrarPerfil($alumno)
     {
@@ -77,12 +88,12 @@ class AlumnoController extends Controller
             $horarioTarde = 0;
         } else {
             $horarioMañana = Horario::where('codigoGrupo', '=', $alumno->codigoGrupo)
-            ->where('horaInicio', '<', '14:00:00')
-            ->orderBy('primerDia', 'asc')
-            ->orderBy('horaInicio', 'asc')
-            ->first();
-            
-            if(!$horarioMañana){
+                ->where('horaInicio', '<', '14:00:00')
+                ->orderBy('primerDia', 'asc')
+                ->orderBy('horaInicio', 'asc')
+                ->first();
+
+            if (!$horarioMañana) {
                 $horarioMañana = 0;
             }
             $horarioTarde = Horario::where('codigoGrupo', '=', $alumno->codigoGrupo)
@@ -98,10 +109,10 @@ class AlumnoController extends Controller
 
         $reservas = Reserva::where('id_alumno', '=', $alumno->id)->get();
         $horariosReservados = [];
-        foreach($reservas as $reserva) {
+        foreach ($reservas as $reserva) {
             $horario = Horario::where('id', '=', $reserva->id_horario)->first();
             $horariosReservados[] = $horario;
-            
+
         }
         //dd($horariosReservados);
         return view('Alumno.perfil', compact('alumno', 'asistencias', 'horarioMañana', 'horarioTarde', 'horariosReservados'));
@@ -134,24 +145,28 @@ class AlumnoController extends Controller
      */
     public function store(Request $request)
     {
+        
+
+        $user = $request->session()->get('user');
+
+        // Calcula la fecha de hace 16 años
+        $fechaHace16Años = now()->subYears(16)->format('Y-m-d');
         //dd($request->all());
         $campos = [
-            'nombre' => 'required|string|max:100',
-            'apellidos' => 'required|string|max:100',
-            'dni' => 'required|string|max:100',
-            'email' => 'required|email',
-            'fechaNacimiento' => 'required|string|max:100',
-            'foto' => 'required|max:10000|mimes:jpeg,png,jpg',
-            'password' => [
-                'required',
-                'min:6',
-                'regex:/([A-Za-z0-9]+(_[A-Za-z0-9]+)+)/i',
-                'confirmed'
-            ],
+            'apellidos' => 'required',
+            'dni' => 'required|unique:alumnos,dni|regex:/^[0-9]{8}[A-Z]$/',
+            'telefono' => 'required|regex:/^[679][0-9]{8}$/',
+            'fechaNacimiento' => 'required|date|before_or_equal:' . $fechaHace16Años,
+            'direccion' => 'required',
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'foto' => 'required|image',
+            'password' => ['required', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])([A-Za-z\d$@$!%*?&]|[^ ]){8,15}$/'],
+            
 
         ];
 
         $mensaje = [
+            'email' => 'El formato del correo electrónico no es válido.',
             'required' => 'El :attribute es obligatorio',
             'foto' => 'La foto es requerida'
         ];
@@ -166,7 +181,7 @@ class AlumnoController extends Controller
             //dd($request->file('foto'));
             $datosalumno['foto'] = 'storage/' . $request->file('foto')->store('uploads', 'public');
         }
-        
+
         Alumno::insert($datosalumno);
 
         // return response()->json($datosalumno);
@@ -314,7 +329,8 @@ class AlumnoController extends Controller
         return response()->json($responseData);
     }
 
-    public function reservarClase($horario, $alumno) {
+    public function reservarClase($horario, $alumno)
+    {
         try {
             Reserva::insert([
                 'id_alumno' => $alumno,

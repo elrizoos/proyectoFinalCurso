@@ -9,7 +9,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
-    ç
+
 </head>
 
 <body>
@@ -29,12 +29,9 @@
             <h1>Perfil de Usuario</h1>
         </header>
 
-        <main class="container">
-            <div class="user-profile">
-                <div class="user-avatar">
-                    <img class="img-thumbnail img-fluid" width="70px" height="100px" src="{{ asset($alumno->foto) }}"
-                        alt="Imagen del usuario">
-                </div>
+        <main class="container my-5">
+            <div class="user-profile d-flex align-items-center mb-4">
+                <img class="img-thumbnail mr-3" width="100px" src="{{ asset($alumno->foto) }}" alt="Imagen del usuario">
                 <div class="user-info">
                     <h2>{{ $alumno->nombre }}</h2>
                     <p>Email: {{ $alumno->email }}</p>
@@ -43,16 +40,18 @@
                 </div>
             </div>
 
-            <div class="user-stats">
-                <div class="stat" data-toggle="modal" data-target="#clasesAsistidasModal">
+            <div class="user-stats d-flex justify-content-around text-center mb-4">
+                <!-- Modificar según sea necesario para la alineación y el diseño -->
+                <!-- Repetir para cada estadística -->
+                <div class="stat p-3">
                     <h3>Clases Asistidas</h3>
                     <p>{{ $asistencias['numeroAsistencias'] }}</p>
                 </div>
-                <div class="stat" data-toggle="modal" data-target="#horasEntrenamientoModal">
+                <div class="stat p-3" data-toggle="modal" data-target="#horasEntrenamientoModal">
                     <h3>Horas de Entrenamiento</h3>
                     <p>{{ $asistencias['numeroAsistencias'] * 1.5 }}</p>
                 </div>
-                <div class="stat">
+                <div class="stat p-3">
                     <h3>Nivel</h3>
                     <p>
                         <?php
@@ -68,10 +67,11 @@
                     </p>
                 </div>
             </div>
+<h2>Próximas Clases</h2>
+    <div class="d-flex flex-column flex-md-row justify-content-between">
+           
 
-            <h2>Próximas Clases</h2>
-
-            <div class="class-card">
+            <div class="class-card p-3 mb-3">
                 <h3>Clase de Pilates Matutina</h3>
                 <p>Fecha: {{ $horarioMañana !== 0 ? $horarioMañana->primerDia : 'No hay registros' }}</p>
                 <p>Hora: {{ $horarioMañana !== 0 ? $horarioMañana->horaInicio : 'No hay registros' }}</p>
@@ -90,13 +90,13 @@
                 @endif
             </div>
 
-            <div class="class-card">
+            <div class="class-card p-3 mb-3">
                 <h3>Clase de Pilates Vespertina</h3>
                 <p>Fecha: {{ $horarioTarde !== 0 ? $horarioTarde['primerDia'] : 'No hay registros' }}</p>
                 <p>Hora: {{ $horarioTarde !== 0 ? $horarioTarde->horaInicio : 'No hay registros' }}</p>
                 <button class="btn btn-primary">Reservar</button>
             </div>
-            <div class="class-card">
+            <div class="class-card p-3 mb-3">
                 @foreach ($horariosReservados as $reserva)
                     <li>De <span>{{ $reserva->horaInicio }}</span> a <span>{{ $reserva->horaFin }}</span> el día
                         <span>{{ $reserva->primerDia }}</span>

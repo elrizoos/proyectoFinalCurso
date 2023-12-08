@@ -121,25 +121,22 @@
                             <li><a href="{{ route('horarios.create') }}">Crear nuevo horario</a></li>
                             
                         </ul>
-                        <input type="button" value="Ir a la configuración general">
+                        <a href="{{ route('horarios.index') }}"><input type="button"
+                                value="Ir a la configuración general"></a>
                     </div>
                 </div>
                 <div class="col col-4">
                     <div class="contenedorTarjeta">
                         <h3>Generador Código</h3>
-                        <ul>
-                            <li><a href="{{route('generador')}}">Generar Código Invitación</a></li>
-                        </ul>
-                        <input type="button" value="Ir a la configuración general">
+                        <a href="{{ route('generador') }}"><input type="button"
+                                value="Ir a la configuración general"></a>
                     </div>
                 </div>
                 <div class="col col-4">
                     <div class="contenedorTarjeta">
                         <h3>Control Facturaciones</h3>
-                        <ul>
-                            <li><a href="{{url('/facturas')}}">Facturas listado</a></li>
-                        </ul>
-                        <input type="button" value="Ir a la configuración general">
+                        <a href="{{ url('/facturas') }}"><input type="button"
+                                value="Ir a la configuración general"></a>
                     </div>
                 </div>
             </div>
