@@ -1012,26 +1012,3 @@ button {
 button:hover {
     background-color: #218838;
 }
-.user-profile {
-    /* Estilos para el perfil del usuario */
-}
-
-.user-info h2 {
-    color: #5b3c88; /* Color principal de la marca */
-}
-
-.stat {
-    background-color: #f5f5f5; /* Fondo claro para las estadísticas */
-    border-radius: 10px; /* Bordes redondeados */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Sombra suave */
-}
-
-.class-card {
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.btn-primary {
-    background-color: #5b3c88; /* Botones que coinciden con la marca */
-}

@@ -174,8 +174,9 @@
                 precioProducto.innerText =
                     '{{ isset($producto['precioAnual']) ? $producto['precioAnual'] : old('precioAnual') }}';
                 textoForma.innerText = 'Pago Anual';
-                precioElegido.value = '{{ isset($producto['precioAnual']) ? $producto['precioAnual'] : old('precioAnual') }}';
-                
+                precioElegido.value =
+                    '{{ isset($producto['precioAnual']) ? $producto['precioAnual'] : old('precioAnual') }}';
+
                 mensualAnual.value = 'anual';
             } else {
                 precioProducto.innerText =
@@ -187,7 +188,7 @@
             }
         }
         document.addEventListener('DOMContentLoaded', function() {
-            var stripe = Stripe('{{ $stripeKey }}'); // Clave pública
+            var stripe = Stripe('{{ $stripeKey }}');
             var elements = stripe.elements();
             var card = elements.create('card');
             card.mount('#card-element');
@@ -203,10 +204,10 @@
 
                 stripe.createToken(card).then(function(result) {
                     if (result.error) {
-                        // Informar al usuario si hubo un error.
+
                         console.log(result.error.message);
                     } else {
-                        // Envía el token a tu servidor.
+
                         document.getElementById('stripeToken').value = result.token.id;
                         form.submit();
                         setInterval(() => {

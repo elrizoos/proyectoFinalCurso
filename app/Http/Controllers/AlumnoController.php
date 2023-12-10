@@ -87,12 +87,12 @@ class AlumnoController extends Controller
             $horarioTarde = 0;
         } else {
             $horarioMañana = Horario::where('codigoGrupo', '=', $alumno->codigoGrupo)
-                ->where('horaInicio', '<', '14:00:00')
-                ->orderBy('primerDia', 'asc')
-                ->orderBy('horaInicio', 'asc')
-                ->first();
-
-            if (!$horarioMañana) {
+            ->where('horaInicio', '<', '14:00:00')
+            ->orderBy('primerDia', 'asc')
+            ->orderBy('horaInicio', 'asc')
+            ->first();
+            
+            if(!$horarioMañana){
                 $horarioMañana = 0;
             }
             $horarioTarde = Horario::where('codigoGrupo', '=', $alumno->codigoGrupo)
@@ -108,10 +108,10 @@ class AlumnoController extends Controller
 
         $reservas = Reserva::where('id_alumno', '=', $alumno->id)->get();
         $horariosReservados = [];
-        foreach ($reservas as $reserva) {
+        foreach($reservas as $reserva) {
             $horario = Horario::where('id', '=', $reserva->id_horario)->first();
             $horariosReservados[] = $horario;
-
+            
         }
         //dd($horariosReservados);
         return view('Alumno.perfil', compact('alumno', 'asistencias', 'horarioMañana', 'horarioTarde', 'horariosReservados'));
@@ -120,9 +120,9 @@ class AlumnoController extends Controller
 
     public function index(Request $request)
     {
-        $column = $request->input('columna', 'id'); // Columna de ordenamiento predeterminada
-        $direction = $request->input('direccion', 'asc'); // Dirección de ordenamiento predeterminada
-        $perPage = $request->input('perPage', 5); // Elementos por página
+        $column = $request->input('columna', 'id');
+        $direction = $request->input('direccion', 'asc');
+        $perPage = $request->input('perPage', 5);
         //$alumnos = Alumno::orderBy('nombre')->paginate(5);
         $alumnos = Alumno::orderBy($column, $direction)->paginate($perPage);
         $grupos = Grupo::paginate(5);
@@ -165,7 +165,6 @@ class AlumnoController extends Controller
         ];
 
         $mensaje = [
-            'email' => 'El formato del correo electrónico no es válido.',
             'required' => 'El :attribute es obligatorio',
             'foto' => 'La foto es requerida'
         ];
@@ -180,10 +179,10 @@ class AlumnoController extends Controller
             //dd($request->file('foto'));
             $datosalumno['foto'] = 'storage/' . $request->file('foto')->store('uploads', 'public');
         }
-
+        
         Alumno::insert($datosalumno);
 
-        // return response()->json($datosalumno);
+
         return redirect('alumnos')->with('mensaje', 'alumno agregado con exito');
     }
 
@@ -305,7 +304,7 @@ class AlumnoController extends Controller
     {
         $columna = $request->input('columna', 'nombre');
 
-        $orden = $request->input('orden', 'asc'); // Valor predeterminado a 'asc' si no se proporciona
+        $orden = $request->input('orden', 'asc');
 
         //dd($columna, $orden);
 
@@ -328,8 +327,7 @@ class AlumnoController extends Controller
         return response()->json($responseData);
     }
 
-    public function reservarClase($horario, $alumno)
-    {
+    public function reservarClase($horario, $alumno) {
         try {
             Reserva::insert([
                 'id_alumno' => $alumno,

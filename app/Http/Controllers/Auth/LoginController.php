@@ -54,12 +54,12 @@ class LoginController extends Controller
      */
     protected function authenticated(Request $request, $user)
     {
-        // Redirigir según el rol del usuario después de iniciar sesión
+
         if ($user->role === 'admin') {
             return redirect()->route('inicio');
         } elseif ($user->role === 'alumno') {
             return redirect()->route('inicioAlumno', ['alumno' => $user->email]);
-        } elseif ($user->role === 'empleado') { // Corregido para usar elseif y añadir llaves
+        } elseif ($user->role === 'empleado') {
             return redirect()->route('inicioEmpleado', ['empleado' => $user->email]);
         }
 

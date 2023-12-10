@@ -123,7 +123,7 @@ class RegisterController extends Controller
             $invitation->used = 1;
             $invitation->save();
 
-            // Crear el usuario
+
             return User::create([
                 'name' => $data['name'],
                 'email' => $data['email'],
@@ -158,7 +158,7 @@ class RegisterController extends Controller
     }
     protected function registered(Request $request, $user)
     {
-        // Redirigir según el rol del usuario después de registrarse
+
 
         $clases = Clase::all();
         $existeUsuario = $this->comprobarExistencia($user);
@@ -183,10 +183,10 @@ class RegisterController extends Controller
 
         }
 
-        // Almacenar el mensaje informativo en la sesión
+
         $request->session()->flash('registro_exitoso', 'Registro exitoso. Bienvenido.');
         $request->session()->put('user', $user);
-        // Redireccionar a la ruta correspondiente
+
         return redirect($redirectPath)->with('clases', $clases);
     }
 

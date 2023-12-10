@@ -17,22 +17,22 @@ class EmpleadoFactory extends Factory
      * @return array<string, mixed>
      */
 
-     protected $model = Empleado::class;
+    protected $model = Empleado::class;
 
     public function definition(): array
     {
-        // Crear una instancia de Faker
+
         $faker = FakerFactory::create();
 
-        // Expresion regular
+
         $regexPattern = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/';
 
-        // Inicializacion de la variable para guardar el valor correcto
+
         $randomValue = '';
 
-        // genera el valor hasta que cumpla la condicion
+
         do {
-            $randomValue = $faker->asciify('**********'); // Genera un valor de 10 caracteres aleatorios
+            $randomValue = $faker->asciify('**********');
         } while (!preg_match($regexPattern, $randomValue));
 
         return [
@@ -44,7 +44,7 @@ class EmpleadoFactory extends Factory
             'fechaNacimiento' => $this->faker->dateTime,
             'direccion' => $this->faker->address,
             'codigoClase' => '1',
-            'foto' =>$this->faker->imageUrl(640, 480, 'people'),
+            'foto' => $this->faker->imageUrl(640, 480, 'people'),
             'password' => $faker->regexify('/([A-Za-z0-9]+(_[A-Za-z0-9]+)+)/i'),
         ];
     }

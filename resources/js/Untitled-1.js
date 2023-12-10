@@ -8,8 +8,8 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    let columnaActual = "nombre"; // Variable para rastrear la columna actual
-    let ordenActual = "asc"; // Variable para rastrear el orden actual
+    let columnaActual = "nombre";   
+    let ordenActual = "asc";   
 
     function ordenarYFiltrarTabla(columna) {
         $.ajax({
@@ -23,14 +23,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
             },
             success: function (data) {
-                // Accede a los datos del JSON
+                  
                 var alumnos = data.alumnos;
                 var pagination = data.pagination;
 
-                // Actualiza la tabla con los resultados ordenados
+                  
                 actualizarTabla(alumnos);
 
-                // Actualiza la paginación
+                  
                 actualizarPaginacion(pagination);
             },
             error: function (xhr, status, error) {
@@ -71,8 +71,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function actualizarPaginacion(pagination) {
-        // Actualiza la paginación en tu vista, por ejemplo, usando Blade en Laravel
-        // Debe estar fuera del elemento <table>
+          
+          
         var paginacion = $("#paginacion");
         paginacion = {{ $alumnos->appends(['columna' => $columnaActual, 'orden' => $ordenActual])->links('pagination::bootstrap-4') }}
     }
@@ -88,14 +88,14 @@ document.addEventListener("DOMContentLoaded", function () {
             ordenarYFiltrarTabla(columna);
         });
     });
-    let columnaActual = "nombre"; // Variable para rastrear la columna actual
-    let ordenActual = "asc"; // Variable para rastrear el orden actual
+    let columnaActual = "nombre";   
+    let ordenActual = "asc";   
     function ordenarYFiltrarTabla(columna) {
         if (columna === columnaActual) {
-            // Si se hace clic en la misma columna, cambia el orden
+              
             ordenActual = ordenActual === "asc" ? "desc" : "asc";
         } else {
-            // Si se hace clic en una nueva columna, restablece el orden a ascendente
+              
             ordenActual = "asc";
             columnaActual = columna;
         }
@@ -109,21 +109,21 @@ document.addEventListener("DOMContentLoaded", function () {
                 ordenActual,
             data: {
                 columna: columnaActual,
-                orden: ordenActual, // Nuevo parámetro para el orden
+                orden: ordenActual,   
             },
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
             },
             success: function (data) {
-                // Accede a los datos del JSON
+                  
                 var alumnos = data.alumnos;
                 var pagination = data.pagination;
 
-                // Haz lo que necesites con los datos
-                console.log(alumnos); // Array de alumnos
-                console.log(pagination); // Datos de paginación
+                  
+                console.log(alumnos);   
+                console.log(pagination);   
 
-                // Por ejemplo, puedes recorrer los alumnos y agregarlos a tu tabla
+                  
                 var tabla = $("#tablaAlumnos tbody");
                 tabla.empty();
 

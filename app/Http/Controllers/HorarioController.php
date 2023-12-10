@@ -26,7 +26,7 @@ class HorarioController extends Controller
         $currentDate = Carbon::parse($semana);
         if ($semana) {
 
-            // Para encontrar el inicio de la semana (Lunes)
+
             $startOfWeek = date('Y-m-d', strtotime('monday this week', strtotime($semana)));
             $endOfWeek = date('Y-m-d', strtotime('sunday this week', strtotime($semana)));
 
@@ -46,7 +46,7 @@ class HorarioController extends Controller
                 'currentDate' => $currentDate,
             ]);
         } else {
-            // Tomamos la fecha del request o la fecha actual si no se provee ninguna
+
             $date = $request->input('date', Carbon::now()->toDateString());
             $currentDate = Carbon::parse($date);
 
@@ -55,7 +55,7 @@ class HorarioController extends Controller
             $endOfWeek = clone $currentDate;
             $endOfWeek->endOfWeek();
 
-            // Verifica las fechas antes de hacer la consulta
+
             //dd($currentDate->toDateString(), $startOfWeek->toDateString(), $endOfWeek->toDateString());
 
             $horarios = Horario::with('clase')
@@ -197,7 +197,7 @@ class HorarioController extends Controller
             $horaInicio = $tramo[0];
             $horaFin = $tramo[1];
 
-            // Datos básicos del horario sin incluir los días, token, ni repetición.
+
             $datosHorarioBase = request()->except('_token', 'tramoHorario', 'diaSemana', 'repetir', 'repeticiones');
 
             //Establece las horas de inicio y fin obtenidas
@@ -205,7 +205,7 @@ class HorarioController extends Controller
             $datosHorarioBase['horaFin'] = $horaFin;
 
 
-            // Días seleccionados y número de repeticiones.
+
             $diasSeleccionados = $request->input('diaSemana');
             //dump($diasSeleccionados);
             $repeticiones = $request->input('repeticiones');
@@ -273,13 +273,13 @@ class HorarioController extends Controller
                         $fechaSiguiente = $cloneFechaCorrespondiente->modify('+1 week');
                         //dump($fechaSiguiente);
 
-                        array_push($$arrayNombre, clone $fechaSiguiente); // Clonamos el objeto antes de añadirlo al array
+                        array_push($$arrayNombre, clone $fechaSiguiente);
                         //dump($$arrayNombre);
 
                         while ($repeticiones > 0) {
                             $fechaSiguiente = $fechaSiguiente->modify('+1 week');
                             //dump($fechaSiguiente);
-                            array_push($$arrayNombre, clone $fechaSiguiente); // Clonamos el objeto antes de añadirlo al array
+                            array_push($$arrayNombre, clone $fechaSiguiente);
                             //dump($$arrayNombre);
                             $repeticiones--;
                         }
@@ -308,13 +308,13 @@ class HorarioController extends Controller
                         $fechaSiguiente = $cloneFechaCorrespondiente;
                         //dump($fechaSiguiente);
 
-                        array_push($$arrayNombre, clone $fechaSiguiente); // Clonamos el objeto antes de añadirlo al array
+                        array_push($$arrayNombre, clone $fechaSiguiente);
                         //dump($$arrayNombre);
 
                         while ($repeticiones > 0) {
                             $fechaSiguiente = $fechaSiguiente->modify('+1 week');
                             //dump($fechaSiguiente);
-                            array_push($$arrayNombre, clone $fechaSiguiente); // Clonamos el objeto antes de añadirlo al array
+                            array_push($$arrayNombre, clone $fechaSiguiente);
                             //dump($$arrayNombre);
                             $repeticiones--;
                         }
@@ -339,20 +339,20 @@ class HorarioController extends Controller
 
 
             } else {
-                // Para cada día seleccionado.
+
                 foreach ($diasSeleccionados as $dia) {
                     $repeticiones = $request->input('repeticiones');
                     $diaInEnglish = $daysConversion[$dia];
                     //dump($diaInEnglish);
-                    // Establecer la fecha de inicio basado en el día seleccionado.
+
                     $fechaInicio = new DateTime($request->input('primerDia'));
                     //dump($fechaInicio);
-                    // Este bucle asegura que la fecha de inicio coincide con el primer día de la semana seleccionado.
+
                     while ($fechaInicio->format('l') != $diaInEnglish) {
                         $fechaInicio->modify('+1 day');
                     }
                     //dump($fechaInicio);
-                    // Si se desea repetir, se guardan múltiples registros, si no, solo uno.
+
 
                     do {
                         $datosHorario = $datosHorarioBase;
@@ -360,7 +360,7 @@ class HorarioController extends Controller
                         //dump($dia);
                         $datosHorario['diaSemana'] = $dia;
 
-                        // Aquí nos aseguramos de que las horas se redefinan correctamente.
+
                         $datosHorario['horaInicio'] = $horaInicio;
                         $datosHorario['horaFin'] = $horaFin;
 
@@ -460,7 +460,7 @@ class HorarioController extends Controller
         $horaFin = $tramo[1];
 
         $this->validate($request, $campos, $mensaje);
-        // Datos básicos del horario sin incluir los días, token, ni repetición.
+
         $datosHorarioBase = request()->except('_method', '_token', 'tramoHorario');
         $datosHorarioBase['horaInicio'] = $horaInicio;
         $datosHorarioBase['horaFin'] = $horaFin;

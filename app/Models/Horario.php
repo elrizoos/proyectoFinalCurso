@@ -13,12 +13,12 @@ class Horario extends Model
 
     public function obtenerCodigoClase()
     {
-        return $this->belongsTo(Clase::class, 'nombre'); // Asegúrate de que 'codigoClase' sea la columna correcta para la relación.
+        return $this->belongsTo(Clase::class, 'nombre');
     }
 
     public function obtenerCodigoEmpleado()
     {
-        return $this->belongsTo(Empleado::class, 'nombre'); // Asegúrate de que 'codigoEmpleado' sea la columna correcta para la relación.
+        return $this->belongsTo(Empleado::class, 'nombre');
     }
     public function obtenerNombreClase()
     {

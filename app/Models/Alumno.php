@@ -15,12 +15,13 @@ class Alumno extends Model
         return $this->hasMany(Asistencia::class);
     }
 
-    public function obtenerAsistencias(){
+    public function obtenerAsistencias()
+    {
         //dd($this);
         $asistencia = Asistencia::where('alumno_id', '=', $this->id)->get();
         //dd($asistencia);
         $numeroAsistencias = $asistencia->count();
-       // dd($numeroAsistencias);
+
         return ['numeroAsistencias' => $numeroAsistencias, 'asistencias' => $asistencia];
     }
 }

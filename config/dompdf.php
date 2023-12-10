@@ -11,9 +11,9 @@ return array(
     | in dompdf_config.inc.php. You can also override the entire config file.
     |
     */
-    'show_warnings' => false,   // Throw an Exception on warnings from dompdf
+    'show_warnings' => false,
 
-    'public_path' => null,  // Override the public path if needed
+    'public_path' => null,
 
     /*
      * Dejavu Sans font is missing glyphs for converted entities, turn it off if you need to show € and £.
@@ -45,7 +45,7 @@ return array(
          * Times-Roman, Times-Bold, Times-BoldItalic, Times-Italic,
          * Symbol, ZapfDingbats.
          */
-        "font_dir" => storage_path('fonts'), // advised by dompdf (https://github.com/dompdf/dompdf/pull/782)
+        "font_dir" => storage_path('fonts'),
 
         /**
          * The location of the DOMPDF font cache directory
@@ -96,9 +96,9 @@ return array(
             "https://" => ["rules" => []]
         ],
 
-         /**
-          * @var string
-          */
+        /**
+         * @var string
+         */
         'log_output_file' => null,
 
         /**
@@ -171,13 +171,13 @@ return array(
          */
         "default_paper_size" => "a4",
 
-         /**
-          * The default paper orientation.
-          *
-          * The orientation of the page (portrait or landscape).
-          *
-          * @var string
-          */
+        /**
+         * The default paper orientation.
+         *
+         * The orientation of the page (portrait or landscape).
+         *
+         * @var string
+         */
         'default_paper_orientation' => "portrait",
 
         /**

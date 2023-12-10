@@ -54,20 +54,20 @@ class FacturacionController extends Controller
         $precio = $request->input('precio') * 100;
         try {
             $charge = \Stripe\Charge::create([
-                'amount' => $precio, // El monto aquí es un ejemplo, convierte tu precio a centavos
-                'currency' => 'eur', // Cambia a tu moneda según sea necesario
+                'amount' => $precio, 
+                'currency' => 'eur', 
                 'description' => 'Pago por ' . $request->input('nombre'),
-                'source' => $request->input('stripeToken'), // El token de Stripe
+                'source' => $request->input('stripeToken'), 
             ]);
             //dd($charge->status);
             if ($charge->status == 'succeeded') {
-                // Redirigir a la página de éxito
+                  
                 $user = Auth::user();
                 $user->verificado = 1;
                 $user->save();
                 do {
-                    $fecha = date('Ymd'); // Fecha actual en formato año-mes-día
-                    $numeroAleatorio = rand(1000, 9999); // Número aleatorio entre 1000 y 9999
+                    $fecha = date('Ymd');   
+                    $numeroAleatorio = rand(1000, 9999);   
                     $numeroReferencia = $fecha . $numeroAleatorio;
 
                     $existe = Factura::where('referencia', $numeroReferencia)->exists();
@@ -88,13 +88,12 @@ class FacturacionController extends Controller
                 return $this->descargarFactura($datosFactura);
                 //return redirect('/success');
             } else {
-                // Redirigir a la página de error
+                  
                 return redirect('/error');
             }
-            // Aquí puedes realizar acciones adicionales en caso de éxito, como actualizar la base de datos
 
         } catch (\Stripe\Exception\ApiErrorException $e) {
-            // Maneja el error aquí (p. ej., mostrar un mensaje al usuario)
+              
             dd($e->getMessage());
         }
     }
@@ -153,13 +152,13 @@ class FacturacionController extends Controller
     }
     private function extraerReferencia($archivo)
     {
-        // Elimina la extensión '.pdf'
+          
         $archivoSinExtension = substr($archivo, 0, -4);
 
-        // Encuentra la posición del guion después de 'factura-'
+          
         $posicionGuion = strpos($archivoSinExtension, '-') + 1;
 
-        // Extrae la referencia desde la posición del guion hasta el final
+          
         return substr($archivoSinExtension, $posicionGuion);
     }
 

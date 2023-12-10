@@ -19,17 +19,17 @@ class EmpleadoController extends Controller
 
     public function inicio(Request $request, $empleado)
     {
-        $empleado = Empleado::where('email','=', $empleado)->first();
+        $empleado = Empleado::where('email', '=', $empleado)->first();
         $codigoGrupo = Grupo::where('codigoClase', '=', $empleado->codigoClase)->first();
         $alumnos = Alumno::where('codigoGrupo', '=', $codigoGrupo->id)->get();
         //dd($empleado, $codigoGrupo, $alumnos);
-        return view("Empleado.index", compact('empleado','alumnos'));
+        return view("Empleado.index", compact('empleado', 'alumnos'));
     }
     public function index(Request $request)
     {
-        $column = $request->input('columna', 'id'); // Columna de ordenamiento predeterminada
-        $direction = $request->input('direccion', 'asc'); // Dirección de ordenamiento predeterminada
-        $perPage = $request->input('perPage', 5); // Elementos por página
+        $column = $request->input('columna', 'id');
+        $direction = $request->input('direccion', 'asc');
+        $perPage = $request->input('perPage', 5);
         //$empleados = Alumno::orderBy('nombre')->paginate(5);
         $empleados = Empleado::orderBy($column, $direction)->paginate($perPage);
         $clases = Clase::paginate(5);
@@ -87,7 +87,7 @@ class EmpleadoController extends Controller
 
         Empleado::insert($datosEmpleado);
 
-        // return response()->json($datosEmpleado);
+
         return redirect('empleados')->with('mensaje', 'Empleado agregado con exito');
     }
 
@@ -189,7 +189,7 @@ class EmpleadoController extends Controller
     {
         $columna = $request->input('columna', 'nombre');
 
-        $orden = $request->input('orden', 'asc'); // Valor predeterminado a 'asc' si no se proporciona
+        $orden = $request->input('orden', 'asc');
 
         //dd($columna, $orden);
 
@@ -218,7 +218,8 @@ class EmpleadoController extends Controller
         return view('Empleado.register', compact('user'));
     }
 
-    public function registrarEmpleado(Request $request) {
+    public function registrarEmpleado(Request $request)
+    {
         if ($request->session()->has('user')) {
             $user = $request->session()->get('user');
         }
@@ -251,7 +252,7 @@ class EmpleadoController extends Controller
         }
         //dd($data);
         Empleado::insert($data);
-        return redirect()->route('inicioEmpleado', ['empleado' => $emailUser]);  
+        return redirect()->route('inicioEmpleado', ['empleado' => $emailUser]);
     }
 
 

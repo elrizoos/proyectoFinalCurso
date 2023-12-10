@@ -18,18 +18,18 @@ class AlumnoFactory extends Factory
     public function definition(): array
     {
 
-        // Crear una instancia de Faker
+
         $faker = FakerFactory::create();
 
-        // Expresion regular
+
         $regexPattern = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/';
 
-        // Inicializacion de la variable para guardar el valor correcto
+
         $randomValue = '';
 
-        // genera el valor hasta que cumpla la condicion
+
         do {
-            $randomValue = $faker->asciify('**********'); // Genera un valor de 10 caracteres aleatorios
+            $randomValue = $faker->asciify('**********');
         } while (!preg_match($regexPattern, $randomValue));
 
         return [

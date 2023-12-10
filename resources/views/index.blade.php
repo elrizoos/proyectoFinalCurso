@@ -17,8 +17,8 @@
 
             @if (session('mensaje'))
                 <div class="success">
-               {{ session('mensaje') }}
-           </div>
+                    {{ session('mensaje') }}
+                </div>
             @endif
 
             <div id="notification-container"></div>
@@ -81,7 +81,8 @@
                                 </script>
                             </li>
                         </ul>
-                        <a href="{{ url('/gestionEmpleados') }}"><input type="button" value="Ir a la configuración general"></a>
+                        <a href="{{ url('/gestionEmpleados') }}"><input type="button"
+                                value="Ir a la configuración general"></a>
                     </div>
                 </div>
                 <div class="col col-4">
@@ -119,24 +120,27 @@
                         <h3>Control Horarios</h3>
                         <ul>
                             <li><a href="{{ route('horarios.create') }}">Crear nuevo horario</a></li>
-                            
+
                         </ul>
-                        <a href="{{ route('horarios.index') }}"><input type="button"
-                                value="Ir a la configuración general"></a>
+                        <input type="button" value="Ir a la configuración general">
                     </div>
                 </div>
                 <div class="col col-4">
                     <div class="contenedorTarjeta">
                         <h3>Generador Código</h3>
-                        <a href="{{ route('generador') }}"><input type="button"
-                                value="Ir a la configuración general"></a>
+                        <ul>
+                            <li><a href="{{route('generador')}}">Generar Código Invitación</a></li>
+                        </ul>
+                        <input type="button" value="Ir a la configuración general">
                     </div>
                 </div>
                 <div class="col col-4">
                     <div class="contenedorTarjeta">
                         <h3>Control Facturaciones</h3>
-                        <a href="{{ url('/facturas') }}"><input type="button"
-                                value="Ir a la configuración general"></a>
+                        <ul>
+                            <li><a href="{{url('/facturas')}}">Facturas listado</a></li>
+                        </ul>
+                        <input type="button" value="Ir a la configuración general">
                     </div>
                 </div>
             </div>
@@ -149,7 +153,7 @@
         var url = '{{ route('notificaciones') }}'
         $(document).ready(function() {
             $.ajax({
-                url: url, // Asegúrate de reemplazar esto con la URL real
+                url: url,
                 type: 'GET',
                 success: function(data) {
                     $('#notification-container').html(data);

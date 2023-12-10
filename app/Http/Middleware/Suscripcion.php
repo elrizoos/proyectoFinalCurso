@@ -16,16 +16,16 @@ class Suscripcion
      */
     public function handle($request, Closure $next, $routeName = null)
     {
-        // Verificar si el usuario está autenticado
+
         if (Auth::check()) {
-            
-            // Obtener el nombre de la ruta actual
+
+
             $currentRoute = $request->route()->getName();
-            if($currentRoute !== 'registro'){
+            if ($currentRoute !== 'registro') {
                 //dd($currentRoute);
             }
-            // Lista de rutas que no requieren suscripción
-            $excludedRoutes = ['facturacionAlumno', 'masTarde', 'checkout', 'registroAlumno', 'registro', 'store','verificarPago','error','success'];
+
+            $excludedRoutes = ['facturacionAlumno', 'masTarde', 'checkout', 'registroAlumno', 'registro', 'store', 'verificarPago', 'error', 'success'];
             //dd($currentRoute, !in_array($currentRoute, $excludedRoutes));
 
 
@@ -33,7 +33,7 @@ class Suscripcion
             $user = Auth::user();
             $segundosDesdeCreacion = $user->created_at->diffInSeconds(now());
             $tiempoTranscurrido = $this->mostrarTiempo($segundosDesdeCreacion);
-            // Verificar si la ruta actual está en la lista de rutas excluidas
+
             //dd(Auth::user()->verificado);
             if (!in_array($currentRoute, $excludedRoutes) && !Auth::user()->verificado && !$request->session()->has('masTarde')) {
                 return redirect()->route('facturacionAlumno', ['tiempoTranscurrido' => $tiempoTranscurrido, 'segundosDesdeCreacion' => $segundosDesdeCreacion]);
@@ -43,7 +43,8 @@ class Suscripcion
         return $next($request);
     }
 
-    public function mostrarTiempo($segundos) {
+    public function mostrarTiempo($segundos)
+    {
         $horas = floor($segundos / 3600);
         $minutos = floor(($segundos % 3600) / 60);
         $segundosRestantes = $segundos % 60;

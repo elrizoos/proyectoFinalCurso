@@ -37,17 +37,17 @@ class GaleriaController extends Controller
 
         $this->validate($request, $campos, $mensaje);
 
-        // Manejar la subida de la imagen
+
         if ($request->hasFile('ruta')) {
             $imagen = $request->file('ruta');
             $nombreImagen = time() . '_' . $imagen->getClientOriginalName();
             $imagen->move(public_path('uploads'), $nombreImagen);
         } else {
-            // Manejar el caso en que no se proporciona una imagen
+
             return redirect()->back()->with('error', 'No se proporcionó ninguna imagen');
         }
 
-        // Insertar datos en la base de datos
+
         Imagen::create([
             'nombre' => $request->nombre,
             'ruta' => 'uploads/' . $nombreImagen,
@@ -56,5 +56,5 @@ class GaleriaController extends Controller
         return redirect()->back()->with('success', 'Imagen almacenada correctamente');
     }
 
-    
+
 }

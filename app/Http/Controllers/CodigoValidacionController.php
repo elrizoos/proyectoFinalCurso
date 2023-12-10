@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\InvitationCode;
 use Illuminate\Support\Facades\Mail;
+
 class CodigoValidacionController extends Controller
 {
     public function generateInvitationCode(Request $request)
@@ -19,7 +20,7 @@ class CodigoValidacionController extends Controller
             'email' => $email,
         ]);
 
-        // Obtén el correo electrónico del usuario de alguna manera, por ejemplo, desde un formulario
+
         $userEmail = $request->input('email');
         //dd($userEmail);
         $this->enviarCodigo($userEmail, $code);
