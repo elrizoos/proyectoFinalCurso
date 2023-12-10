@@ -46,7 +46,6 @@ class AlumnoController extends Controller
             'fechaNacimiento' => 'required|date|before_or_equal:' . $fechaHace16Años,
             'direccion' => 'required',
             'foto' => 'required|image',
-            'password' => ['required', 'regex:/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/'],
         ], [
              'telefono.regex' => 'El número de teléfono debe comenzar con 6, 7, o 9 y tener un total de 9 dígitos.',
             'password.regex' => 'La contraseña debe tener al menos 8 caracteres, incluyendo una letra mayúscula, un número y un signo especial.',

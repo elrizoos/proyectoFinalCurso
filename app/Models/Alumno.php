@@ -9,6 +9,7 @@ class Alumno extends Model
 {
     use HasFactory;
     public $timestamps = true;
+    protected $fillable = ['nombre', 'apellidos', 'dni', 'telefono', 'email', 'fechaNacimiento','direccion','foto','codigoGrupo','password'];
     public function asistencias()
     {
         return $this->hasMany(Asistencia::class);

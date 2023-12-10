@@ -16,8 +16,8 @@ class CheckRole
     public function handle($request, Closure $next, ...$roles)
     {
         $currentRoute = $request->route()->getName();
-        //dd($request->user(), $roles);
-        $paginasPermitidas = ['alumnos.index', 'inicio'];
+        //dd($currentRoute);
+        $paginasPermitidas = ['alumnos.index', 'inicio','empleados'];
 
         
         // Verificar si el usuario está autenticado

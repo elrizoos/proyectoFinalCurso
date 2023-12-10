@@ -36,7 +36,7 @@
                     @foreach ($empleados as $empleado)
                         <tr>
                             <td>
-                                <img src="{{ asset('storage/uploads/2P3aiH9K0cacSGXQL5AsHZMLYKJkFBTSzeLPO7MP.png') }}" alt="Imagen del usuario">
+                                <img src="{{ asset('/storage/'.$empleado->foto) }}" alt="Imagen del usuario">
 
                             </td>
                             <td>{{ $empleado->id }}</td>

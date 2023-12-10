@@ -190,7 +190,7 @@ Route::middleware(['auth', 'checkRole:empleado'])->group(function () {
         return view('Empleado.create');
     });
 
-    Route::get('/empleados', function () {
+    Route::get('/empleado', function () {
         return view('Empleado.index');
     });
 

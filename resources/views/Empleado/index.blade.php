@@ -25,8 +25,8 @@
                 <strong>Dirección:</strong> {{ $empleado->direccion }}<br>
                 <strong>Código de Clase:</strong> {{ $empleado->codigoClase }}
             </p>
-            <a href="{{ url( $empleado->foto) }}" target="_blank">
-                <img src="{{ url( $empleado->foto) }}" class="img-fluid img-thumbnail" alt="Foto de {{ $empleado->nombre }}">
+            <a href="{{ asset('/storage/' . $empleado->foto)  }}" target="_blank">
+                <img src="{{ asset('/storage/' . $empleado->foto) }}" class="img-fluid img-thumbnail" alt="Foto de {{ $empleado->nombre }}">
             </a>
         </div>
     </div>

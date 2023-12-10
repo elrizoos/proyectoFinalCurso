@@ -82,7 +82,7 @@ use Carbon\Carbon;
                 </tbody>
 
 
-            </table>{{ $horarios }}
+            </table>
         </div>
     @endsection
 </body>

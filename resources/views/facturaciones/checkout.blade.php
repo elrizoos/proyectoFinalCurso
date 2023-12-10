@@ -96,9 +96,7 @@
         </header>
         <?php
         $producto = session()->get('producto');
-        var_dump($producto);
         $producto = json_decode($producto, true);
-        var_dump($producto['nombre']);
         ?>
         <main>
             <div class="container mt-4">

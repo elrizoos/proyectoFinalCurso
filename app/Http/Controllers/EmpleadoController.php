@@ -21,7 +21,7 @@ class EmpleadoController extends Controller
     {
         $empleado = Empleado::where('email','=', $empleado)->first();
         $codigoGrupo = Grupo::where('codigoClase', '=', $empleado->codigoClase)->first();
-        $alumnos = Alumno::where('codigoGrupo', '=', $codigoGrupo)->get();
+        $alumnos = Alumno::where('codigoGrupo', '=', $codigoGrupo->id)->get();
         //dd($empleado, $codigoGrupo, $alumnos);
         return view("Empleado.index", compact('empleado','alumnos'));
     }
